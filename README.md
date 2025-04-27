@@ -1,6 +1,6 @@
 # GSplat_MA_Projekt
 
-##Pipeline mit Enroot Container ausführen
+## Pipeline mit Enroot Container ausführen
 
 ### Schritte:
 
