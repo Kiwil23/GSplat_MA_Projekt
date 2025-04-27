@@ -29,7 +29,7 @@
 
 6. Interaktive Session mit `exit` beenden, um Ressourcen wieder freizugeben.
 
-8. `gpu_job.sbatch` Pfade anpassen.
+8. In `gpu_job.sbatch` Pfade anpassen.
 
 9. Batch-Job mit folgendem Befehl starten:
    ```bash
