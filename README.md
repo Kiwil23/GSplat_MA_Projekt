@@ -25,7 +25,7 @@
    ```bash
    srun enroot import docker://kiwil23/splat_tools_slim
    ```
-   Benenne die File zu "kiwil23_splat_tools_slim" um  
+   Benenne die File zu `kiwil23_splat_tools_slim.sqsh` um  
 
 6. Interaktive Session mit `exit` beenden, um Ressourcen wieder freizugeben.  
 
