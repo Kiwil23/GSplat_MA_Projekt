@@ -61,13 +61,17 @@
 2. Für Linux https://docs.docker.com/engine/install/ubuntu/
 3. NVIDIA Container Toolkit instalieren https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
 4. Verzeichnis anlegen mit der Struktur:
-   MeinVerzeichnis \n
-      |---- original_images \n
-      |---- result_data \n
-      |---- scripts 
-5. `pipeline.py` in `scripts` kopieren und source Bilder in original_images
+MeinVerzeichnis
+│
+├── original_images
+│
+├── result_data
+│
+└── scripts
+
+5. `pipeline.py` in `scripts` kopieren und source Bilder in `original_images` packen
    
 6. `cd <FULL_PATH_TO>/Docker`
 7. `docker build -t <IMAGE_NAME> .`
 8. `docker run -it --gpus all -v <FULL_PATH_TO>/original_images:/mnt/original_images -v <FULL_PATH_TO>/result_data:/mnt/result_data -v <FULL_PATH_TO>/scripts:/mnt/pipeline_scrips -p 7007:7007 <IMAGE_NAME> python3 /mnt/pipeline_scrips/pipeline.py  `
-9. In result_data findet sich dann das splat.ply, die Trainingsdaten und das rohe Splatfacto Ergeniss
+9. In `result_data` findet sich dann das `splat.ply`, die Trainingsdaten und das rohe Splatfacto Ergeniss
