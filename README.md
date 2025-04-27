@@ -61,13 +61,13 @@
 2. Für Linux https://docs.docker.com/engine/install/ubuntu/
 3. NVIDIA Container Toolkit instalieren https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
 4. Verzeichnis anlegen mit der Struktur:
-MeinVerzeichnis
-│
-├── original_images
-│
-├── result_data
-│
-└── scripts
+MeinVerzeichnis  
+│  
+├── original_images  
+│  
+├── result_data  
+│  
+└── scripts  
 
 5. `pipeline.py` in `scripts` kopieren und source Bilder in `original_images` packen
    
