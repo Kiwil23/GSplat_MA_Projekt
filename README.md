@@ -57,7 +57,7 @@
 
 ## Lokale Ausführung
 ### Schritte:
-1. Für Windows Docker Desktop herunterladen https://www.docker.com/products/docker-desktop/ (Nutzung von WSL 2 sicherstellen, evtl. müssen Host Resourcen mit eine wsl.config erweitert werden)
+1. Für Windows Docker Desktop herunterladen https://www.docker.com/products/docker-desktop/ (Nutzung von WSL 2 sicherstellen, evtl. müssen Host Resourcen mit einer wsl.config erweitert werden)
 2. Für Linux https://docs.docker.com/engine/install/ubuntu/
 3. NVIDIA Container Toolkit instalieren https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
 4. Verzeichnis anlegen mit der Struktur:
