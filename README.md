@@ -5,13 +5,15 @@
 ### Schritte:
 
 1. Mit SSH verbinden:
-   ```bash
+```bash
    ssh login.ai.lrz.de -l xxyyyzz
    ```
 
-2. Den Ordner `Containers` aus `/container_workspace` auf das `/home` Verzeichnis mit SSH SCP Command oder über das Frontend hochladen.
+2. Source Images in `original_iamges` packen
+   
 
-3. Source Bilder in original_images packen
+3. Den Ordner `Containers` aus `/container_workspace` auf das `/home` Verzeichnis mit SSH SCP Command oder über das Frontend hochladen.
+
 
 4. Eine interaktive Session starten:
    ```bash
