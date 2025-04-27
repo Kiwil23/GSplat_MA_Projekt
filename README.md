@@ -49,3 +49,5 @@ Pipeline mit Enroot Container ausführen
     ```bash
     sbatch gpu_job.sbatch
     ```
+12. Der Ordner "scrips" enthält pipeline.py Dieses Script steuert den Ablauf im Container und kann modifiziert werden.
+13. Der Container beinhaltet Colmap, die Nerfacto/Splatfacto Pipeline sowie das Colmap read_write_module.py das mit import read_write_module verwendet werden kann.
