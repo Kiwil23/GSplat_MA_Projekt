@@ -21,12 +21,9 @@ Pipeline mit Enroot Container ausführen
    ```bash
    srun enroot import docker://kiwil23/splat_tools_slim
    ```
+   Benenne die File zu "kiwil23_splat_tools_slim" um
 
 5. Interaktive Session mit `exit` beenden, um Ressourcen wieder freizugeben.
-
-6. Oder
-
-7. `kiwil23_splat_tools_slim.sqsh` aus dem Repo herunterladen und mit SSH SCP Command oder über das Frontend hochladen.
 
 8. `gpu_job.sbatch` Pfade anpassen.
 
