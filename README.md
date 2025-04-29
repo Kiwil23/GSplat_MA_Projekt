@@ -25,11 +25,11 @@
    ```bash
    srun enroot import docker://kiwil23/splat_tools_slim
    ```
-   Benenne die File zu "kiwil23_splat_tools_slim" um  
+   Benenne die File zu `kiwil23_splat_tools_slim.sqsh` um  
 
 6. Interaktive Session mit `exit` beenden, um Ressourcen wieder freizugeben.  
 
-8. In `gpu_job.sbatch` Pfade anpassen.  
+8. In `gpu_job.sbatch` Pfade anpassen und auf home Verzeichnis im Cluster laden.  
 
 9. Batch-Job mit folgendem Befehl starten:
    ```bash
@@ -69,9 +69,12 @@ MeinVerzeichnis
 │  
 └── scripts  
 
-5. `pipeline.py` in `scripts` kopieren und source Bilder in `original_images` packen  
+5. `pipeline.py` in `scripts` kopieren und source Bilder in `original_images` packen
    
 6. `cd <FULL_PATH_TO>/Docker`  
 7. `docker build -t <IMAGE_NAME> .`  
 8. `docker run -it --gpus all -v <FULL_PATH_TO>/original_images:/mnt/original_images -v <FULL_PATH_TO>/result_data:/mnt/result_data -v <FULL_PATH_TO>/scripts:/mnt/pipeline_scrips -p 7007:7007 <IMAGE_NAME> python3 /mnt/pipeline_scrips/pipeline.py  `  
-9. In `result_data` findet sich dann das `splat.ply`, die Trainingsdaten und das rohe Splatfacto Ergeniss  
+9. In `result_data` findet sich dann das `splat.ply`, die Trainingsdaten und das rohe Splatfacto Ergeniss
+
+## Image auf DockerHub
+ https://hub.docker.com/repository/docker/kiwil23/splat_tools_slim/general
