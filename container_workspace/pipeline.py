@@ -45,9 +45,9 @@ subprocess.run([
     "--database_path", db_path,
     "--image_path", images_dir,
     "--SiftExtraction.use_gpu", "1",
-    "--SiftExtraction.gpu_index", "0",
+    "--SiftExtraction.gpu_index", "0,1",
     "--ImageReader.single_camera", "1",
-    "--ImageReader.camera_model", "PINHOLE"
+    "--ImageReader.camera_model", "SIMPLE_RADIAL"
 ], check=True)
 echo("COLMAP: Feature-Extraktion abgeschlossen (GPU verwendet)")
 
@@ -55,7 +55,7 @@ echo("COLMAP: Feature-Extraktion abgeschlossen (GPU verwendet)")
 subprocess.run(["colmap", "exhaustive_matcher",
                 "--database_path", db_path,
                 "--SiftMatching.use_gpu", "1",
-                "--SiftMatching.gpu_index", "0"],
+                "--SiftMatching.gpu_index", "0,1"],
                check=True)
 echo("COLMAP: Matching abgeschlossen (GPU verwendet)")
 
@@ -63,7 +63,9 @@ echo("COLMAP: Matching abgeschlossen (GPU verwendet)")
 subprocess.run(["colmap", "mapper",
                 "--database_path", db_path,
                 "--image_path", images_dir,
-                "--output_path", sparse_dir], check=True)
+                "--output_path", sparse_dir,
+                "--Mapper.num_threads", "20"], 
+                check=True)
 echo("COLMAP: Mapping abgeschlossen")
 
 # Optional: Pointcloud Bereinigung
@@ -85,18 +87,27 @@ echo("SplatFacto: Trainingsdaten vorbereitet")
 
 # SplatFacto Training starten
 echo("SplatFacto: Training gestartet")
-subprocess.run(["ns-train", "splatfacto",
-                "--viewer.websocket_port", "None",
-                "--viewer.quit-on-train-completion", "True",
-                "--data", train_data_dir,
-                "--output-dir", result_data_dir,
-                "--max-num-iterations", "5000"
-            ], check=True)
+subprocess.run([
+    "ns-train", "splatfacto-big",
+    "--max-num-iterations", "20000",
+    "--pipeline.model.cull_alpha_thresh", "0.004",
+    "--pipeline.model.cull_scale_thresh", "0.1",
+    "--pipeline.model.reset_alpha_every", "10",
+    "--pipeline.model.use_scale_regularization", "True",
+    "--viewer.websocket-port", "None",
+    "--viewer.quit-on-train-completion", "True",
+    "--output-dir", result_data_dir,
+    "nerfstudio-data",
+    "--data", train_data_dir,
+    "--downscale-factor", "1",
+ 
+], check=True)
 echo("SplatFacto: Training erfolgreich")
 
 
+
 # Suche Ordner der config.yml für Export (Ordnername nicht vorhersehbar)
-config_Parent_dir = os.path.join(result_data_dir,"train_data/splatfacto" )  
+config_Parent_dir = os.path.join(result_data_dir,"unnamed/splatfacto" )  
 folders = [f for f in os.listdir(config_Parent_dir) if os.path.isdir(os.path.join(config_Parent_dir, f))]
 
 if folders:
@@ -117,5 +128,5 @@ subprocess.run(["ns-export", "gaussian-splat",
                 "--output-dir", result_data_dir], check=True)
 echo("Export abgeschlossen")
 
-os.rename(os.path.join(result_data_dir,"train_data"), os.path.join(result_data_dir,"nerfstudio_output_data"))
+os.rename(os.path.join(result_data_dir,"unnamed"), os.path.join(result_data_dir,"nerfstudio_output_data"))
 print("\n\033[94m Pipeline abgeschlossen.\033[0m")

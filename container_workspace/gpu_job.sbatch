@@ -1,8 +1,9 @@
 #!/bin/bash
 #SBATCH -p lrz-hgx-h100-94x4
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:2
+#SBATCH --time=04:00:00   
 #SBATCH -o LOG.out
-#SBATCH -e ERROR.err
+#SBATCH --cpus-per-task=26
 
 # Instanzname
 INSTANCE=splat_tools_instance
