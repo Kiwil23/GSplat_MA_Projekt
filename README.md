@@ -53,7 +53,7 @@ Containers/
 └── scripts/
 ```
 
-- In `Containers/scripts/` alle Dateien aus `pipeline_assets/main_pipeline/scripts` kopieren  
+- In `Containers/scripts/` (Cluster) alle Dateien aus (Repo) `pipeline_assets/main_pipeline/scripts` kopieren  
 - `gpu_job.sbatch` in `Jobs/` speichern und darin die Pfade entsprechend auf die `Containers/`-Struktur anpassen
 
 ---
