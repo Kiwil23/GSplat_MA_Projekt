@@ -184,10 +184,11 @@ def run_splatfacto(in_dir):
     echo("Starting SplatFacto training...")
     subprocess.run([
         "ns-train", "splatfacto-big",
-        "--max-num-iterations", "20000",
-        "--pipeline.model.cull_alpha_thresh", "0.004",
-        "--pipeline.model.cull_scale_thresh", "0.1",
-        "--pipeline.model.reset_alpha_every", "10",
+        "--max-num-iterations", "30000",
+        "--pipeline.model.cull_alpha_thresh", "0.02", #Default 0.005
+        "--pipeline.model.stop_screen_size_at" ,"4000", #Default 4000
+        "--pipeline.model.cull_scale_thresh", "0.1",  #Default 0.5
+        "--pipeline.model.reset_alpha_every", "50",  #Default 30
         "--pipeline.model.use_scale_regularization", "True",
         "--viewer.websocket-port", "None",
         "--viewer.quit-on-train-completion", "True",
