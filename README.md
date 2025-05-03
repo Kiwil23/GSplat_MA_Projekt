@@ -66,8 +66,8 @@ In `gpu_job.sbatch` können folgende Argumente gesetzt werden:
 
 | Argument                    | Beschreibung                                                  |
 |----------------------------|---------------------------------------------------------------|
-| `mp4_to_images`            | extrahiert Einzelframes                                       |
-| `mp4_to_colmap`            | gibt COLMAP-Ergebnisse zurück                                |
+| `--pipeline_type = "mp4_to_images"`            | extrahiert Einzelframes                                       |
+| `--pipeline_type= "mp4_to_colmap"`            | gibt COLMAP-Ergebnisse zurück                                |
 | `mp4_to_transforms`        | COLMAP → für Splatfacto vorbereitet                          |
 | `mp4_to_splat`             | vollständige Pipeline inkl. .ply für Training                |
 
