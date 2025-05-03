@@ -32,9 +32,9 @@
 
 7. Session mit `exit` beenden.
 
-8. Datei umbenennen in:
+8. Datei umbenennen:
    ```bash
-   mv kiwil23+splat_tools_slim.sqsh kiwil23_splat_tools_slim.sqsh
+   Von kiwil23+splat_tools_slim.sqsh in kiwil23_splat_tools_slim.sqsh
    ```
 
 ---
