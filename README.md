@@ -1,19 +1,18 @@
 # GSplat_MA_Projekt
 
-## Pipeline mit Enroot Container ausführen
+## Pipeline auf Cluster ausführen
 
-### Schritte:
+### Enroot Container Clonen:
+
+Frontend öffnen https://ood-1.ai.lrz.de/pun/sys/dashboard
+
+3. Einen Ordner `Containers` im `/home` Verzeichnis erstellen
 
 1. Mit SSH verbinden:
 ```bash
    ssh login.ai.lrz.de -l xxyyyzz
-   ```  
-
-2. Source Images in `original_iamges` packen  
-   
-
-3. Den Ordner `Containers` aus `/container_workspace` auf das `/home` Verzeichnis mit SSH SCP Command oder über das Frontend hochladen.  
-
+   ```
+und    ```cd Containers   ``` Verzeichnis wechseln
 
 4. Eine interaktive Session starten:
    ```bash
@@ -25,24 +24,38 @@
    ```bash
    srun enroot import docker://kiwil23/splat_tools_slim
    ```
-   Benenne die File zu `kiwil23_splat_tools_slim.sqsh` um  
+6. Interaktive Session mit `exit` beenden, um Ressourcen wieder freizugeben.
+7. Benenne die File zu `kiwil23_splat_tools_slim.sqsh` um
 
-6. Interaktive Session mit `exit` beenden, um Ressourcen wieder freizugeben.  
+### Pipeline Umgebung vorbereiten:
 
-8. In `gpu_job.sbatch` Pfade anpassen und auf home Verzeichnis im Cluster laden.  
+Im ordner Containers folgende struktur anlegen
+Containers  
+│  
+├── input_data  
+│  
+├── result_data  
+│  
+└── scripts
 
-9. Batch-Job mit folgendem Befehl starten:
+in scripts alles scripts aus 
+
+
+
+9. In `gpu_job.sbatch` Pfade anpassen und auf home Verzeichnis im Cluster laden.  
+
+10. Batch-Job mit folgendem Befehl starten:
    ```bash
    sbatch gpu_job.sbatch
    ```  
 
-10. Falls ein Fehler auftritt:
+11. Falls ein Fehler auftritt:
     ```
     sbatch: error: Batch script contains DOS line breaks (\r\n)
     sbatch: error: instead of expected UNIX line breaks (\n).
     ```  
 
-11. Den Fehler beheben mit:
+12. Den Fehler beheben mit:
     ```bash
     sed -i 's/\r$//' gpu_job.sbatch
     ```
@@ -51,9 +64,9 @@
     sbatch gpu_job.sbatch
     ```  
 
-12. Der Ordner "scrips" enthält pipeline.py Dieses Script steuert den Ablauf im Container und kann modifiziert werden.  
-13. In result_data findet sich dann das splat.ply, die Trainingsdaten und das rohe Splatfacto Ergeniss  
-14. Der Container beinhaltet Colmap, die Nerfacto/Splatfacto Pipeline sowie das Colmap read_write_module.py das mit import read_write_module verwendet werden kann.  
+13. Der Ordner "scrips" enthält pipeline.py Dieses Script steuert den Ablauf im Container und kann modifiziert werden.  
+14. In result_data findet sich dann das splat.ply, die Trainingsdaten und das rohe Splatfacto Ergeniss  
+15. Der Container beinhaltet Colmap, die Nerfacto/Splatfacto Pipeline sowie das Colmap read_write_module.py das mit import read_write_module verwendet werden kann.  
 
 ## Lokale Ausführung
 ### Schritte:
