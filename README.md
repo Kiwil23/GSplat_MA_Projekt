@@ -46,14 +46,15 @@
 ```
 Jobs/
 ├── gpu_job.sbatch
+
 Containers/
-input_data/
-result_data/
-scripts/
+├── input_data/
+├── result_data/
+└── scripts/
 ```
 
-- In `scripts/` alle Dateien aus `pipeline_assets/main_pipeline/scripts` kopieren  
-- `gpu_job.sbatch` in `Jobs/` speichern und Pfade entsprechend anpassen
+- In `Containers/scripts/` alle Dateien aus `pipeline_assets/main_pipeline/scripts` kopieren  
+- `gpu_job.sbatch` in `Jobs/` speichern und darin die Pfade entsprechend auf die `Containers/`-Struktur anpassen
 
 ---
 
