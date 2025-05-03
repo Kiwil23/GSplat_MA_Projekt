@@ -193,6 +193,7 @@ docker run -it --gpus all \
   --pipeline_type="mp4_to_splat" \
   --is_big_dataset="False" && echo "pipeline.py done"
 ```
+oder mit Mockup.sh unter `pipeline_assets/jobscripts/Mockup.sh` 
 
 7. Output liegt in `result_data/`
 
