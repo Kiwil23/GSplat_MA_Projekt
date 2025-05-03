@@ -55,13 +55,37 @@ Nimmt eine .mp4 in input_data
 
 Nimmt mehrere einzelbilder in input_data
 --pipeline_type = "images_to_colmap" //gibt colmap Ergenisse zurück
---pipeline_type = "images_to_transforms"
---pipeline_type = "images_to_splat"
+--pipeline_type = "images_to_transforms" //gibt für splatfacto vorbereitete colmap Ergebnisse zurück
+--pipeline_type = "images_to_splat" //gibt alle zum training verwendeten Daten und eine .ply zurück
 
+Nimmt colmap daten in der Form
+input_data 
+│  
+├── images 
+│  
+├── sparse 
+│  
+└── database.db
 
---pipeline_type = "colmap_to_transforms"
---pipeline_type = "colmap_to_splat"
---pipeline_type = "transforms_to_splat"
+--pipeline_type = "colmap_to_transforms" //gibt für splatfacto vorbereitete colmap Ergebnisse zurück
+--pipeline_type = "colmap_to_splat" //gibt alle zum training verwendeten Daten und eine .ply zurück
+
+Nimmt für splatfacto vorbereitete colmap in form von
+input_data 
+│  
+├── colmap
+|         ├── sparse
+|         ├── database.db
+|
+├── images 
+├── images_2
+├── images_4
+├── images_8
+├── sparse_pc 
+│  
+└── transforms.json
+
+--pipeline_type = "transforms_to_splat" //gibt alle zum training verwendeten Daten und eine .ply zurück
 
 
 
