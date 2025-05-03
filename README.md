@@ -28,8 +28,9 @@ und    ```cd Containers   ``` Verzeichnis wechseln
 7. Benenne die File zu `kiwil23_splat_tools_slim.sqsh` um
 
 ### Pipeline Umgebung vorbereiten:
+Folgende struktur anlegen
 
-Im ordner Containers folgende struktur anlegen
+Jobs
 Containers  
 │  
 ├── input_data  
@@ -38,7 +39,30 @@ Containers
 │  
 └── scripts
 
-in scripts alles scripts aus 
+in scripts alles scripts aus pipeline_assets/main_pipeline/scripts kopieren
+
+in Jobs gpu_job.sbatch packen
+pfade in gpu_job.sbatch anpassen
+
+### Pipeline ausführen:
+In gpu_job.sbatch können die Argumente --pipeline_type, --is_big_dataset gesetzt werden
+
+Nimmt eine .mp4 in input_data
+--pipeline_type = "mp4_to_images" //gibt extrahierte einzelframes zurück
+--pipeline_type = "mp4_to_colmap" //gibt colmap Ergenisse zurück
+--pipeline_type = "mp4_to_transforms" //gibt für splatfacto vorbereitete colmap Ergebnisse zurück
+--pipeline_type = "mp4_to_splat" //gibt alle zum training verwendeten Daten und eine .ply zurück
+
+Nimmt mehrere einzelbilder in input_data
+--pipeline_type = "images_to_colmap" //gibt colmap Ergenisse zurück
+--pipeline_type = "images_to_transforms"
+--pipeline_type = "images_to_splat"
+
+
+--pipeline_type = "colmap_to_transforms"
+--pipeline_type = "colmap_to_splat"
+--pipeline_type = "transforms_to_splat"
+
 
 
 
