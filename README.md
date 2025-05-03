@@ -66,18 +66,18 @@ In `gpu_job.sbatch` können folgende Argumente gesetzt werden:
 
 | Argument                    | Beschreibung                                                  |
 |----------------------------|---------------------------------------------------------------|
-| `--pipeline_type = "mp4_to_images"`            | extrahiert Einzelframes                                       |
-| `--pipeline_type= "mp4_to_colmap"`            | gibt COLMAP-Ergebnisse zurück                                |
-| `mp4_to_transforms`        | COLMAP → für Splatfacto vorbereitet                          |
-| `mp4_to_splat`             | vollständige Pipeline inkl. .ply für Training                |
+| `--pipeline_type="mp4_to_images"`            | extrahiert Einzelframes                                       |
+| `--pipeline_type="mp4_to_colmap"`            | gibt COLMAP-Ergebnisse zurück                                |
+| `--pipeline_type="mp4_to_transforms"`        | COLMAP → für Splatfacto vorbereitet                          |
+| `--pipeline_type="mp4_to_splat"`             | (Default) vollständige Pipeline inkl. .ply für Training                |
 
 #### Für Einzelbilder in `input_data/`:
 
 | Argument                    | Beschreibung                                                  |
 |----------------------------|---------------------------------------------------------------|
-| `images_to_colmap`         | gibt COLMAP-Ergebnisse zurück                                |
-| `images_to_transforms`     | COLMAP → für Splatfacto vorbereitet                          |
-| `images_to_splat`          | vollständige Pipeline inkl. .ply für Training                |
+| `--pipeline_type="images_to_colmap"`         | gibt COLMAP-Ergebnisse zurück                                |
+| `--pipeline_type="images_to_transforms"`     | COLMAP → für Splatfacto vorbereitet                          |
+| `--pipeline_type="images_to_splat"`          | vollständige Pipeline inkl. .ply für Training                |
 
 #### Für vorhandene COLMAP-Daten:
 
@@ -91,8 +91,8 @@ input_data/
 
 | Argument                    | Beschreibung                                                  |
 |----------------------------|---------------------------------------------------------------|
-| `colmap_to_transforms`     | für Splatfacto vorbereiten                                   |
-| `colmap_to_splat`          | vollständige Pipeline inkl. .ply für Training                |
+| `--pipeline_type="colmap_to_transforms"`     | für Splatfacto vorbereiten                                   |
+| `--pipeline_type="colmap_to_splat"`          | vollständige Pipeline inkl. .ply für Training                |
 
 #### Für vorbereitete COLMAP-Daten für Splatfacto:
 
@@ -112,14 +112,14 @@ input_data/
 
 | Argument                    | Beschreibung                                                  |
 |----------------------------|---------------------------------------------------------------|
-| `transforms_to_splat`      | vollständige Pipeline inkl. .ply für Training                |
+| `--pipeline_type="transforms_to_splat"`      | vollständige Pipeline inkl. .ply für Training                |
 
 #### Datensatzgröße:
 
 | Option             | Wirkung                                                                   |
 |--------------------|---------------------------------------------------------------------------|
-| `--is_big_dataset="True"`  | zusätzliche Filterung, nützlich bei langen Videos oder vielen Bildern |
-| `--is_big_dataset="False"` | Standardverhalten, empfohlen für kleinere Datensätze               |
+| `--is_big_dataset="True"`  | zusätzliche Filterung, nur bei großen Datensätzen z.B. Video über 1 min |
+| `--is_big_dataset="False"` | (Default) empfohlen für kleinere Datensätze               |
 
 #### Pipeline starten:
 
@@ -191,7 +191,7 @@ docker run -it --gpus all \
   -p 7007:7007 <IMAGE_NAME> \
   python3 /mnt/pipeline_scripts/pipeline.py \
   --pipeline_type="mp4_to_splat" \
-  --is_big_dataset="True" && echo "pipeline.py done"
+  --is_big_dataset="False" && echo "pipeline.py done"
 ```
 
 7. Output liegt in `result_data/`
