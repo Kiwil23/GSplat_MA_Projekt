@@ -79,7 +79,7 @@ In `gpu_job.sbatch` können folgende Argumente gesetzt werden:
 | `--pipeline_type="images_to_transforms"`     | COLMAP → für Splatfacto vorbereitet                          |
 | `--pipeline_type="images_to_splat"`          | vollständige Pipeline inkl. .ply für Training                |
 
-#### Für vorhandene COLMAP-Daten:
+#### Für vorhandene COLMAP-Daten in ` input_data` :
 
 Ordnerstruktur:
 ```
@@ -94,7 +94,7 @@ input_data/
 | `--pipeline_type="colmap_to_transforms"`     | für Splatfacto vorbereiten                                   |
 | `--pipeline_type="colmap_to_splat"`          | vollständige Pipeline inkl. .ply für Training                |
 
-#### Für vorbereitete COLMAP-Daten für Splatfacto:
+#### Für vorbereitete COLMAP-Daten für Splatfacto ` input_data` :
 
 Ordnerstruktur:
 ```
