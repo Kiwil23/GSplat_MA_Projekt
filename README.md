@@ -1,6 +1,6 @@
-# 🌀 GSplat_MA_Projekt
+# GSplat_MA_Projekt
 
-## 🚀 Pipeline auf dem Cluster ausführen
+## Pipeline auf dem Cluster ausführen
 
 ### 📦 Enroot-Container klonen
 
