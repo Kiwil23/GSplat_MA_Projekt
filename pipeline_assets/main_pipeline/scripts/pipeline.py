@@ -74,7 +74,8 @@ def extract_useful_images(in_dir, out_dir):
         "--exposure_threshold", "240"
     ], check=True)
 
-    print(f"Selected {len(os.listdir(out_dir))} images.")
+    print(f"\033[92mSelected {len(os.listdir(out_dir))} images.\033[0m")
+
 
     # Does a extra cleanup of blury images but can fail on small datasets
     if is_big_dataset:
@@ -86,36 +87,49 @@ def extract_useful_images(in_dir, out_dir):
             "--groups", "1",
             "--yes"
         ], check=True)
-        print(f"Filtered to {len(os.listdir(out_dir))} images.")
+        print(f"\033[92mFiltered to {len(os.listdir(out_dir))} images.\033[0m")
+
 
 
 #---------------------------------------------------------------------------------------------------------------------------
 # Run COLMAP to reconstruct sparse 3D structure from images
 #---------------------------------------------------------------------------------------------------------------------------
 def run_colmap_pipeline(in_dir, database):
+    # Step 1: Create database
     subprocess.run(["colmap", "database_creator", "--database_path", database], check=True)
     echo("COLMAP: Database created.")
 
+    # Step 2: Feature extraction (enhanced)
     subprocess.run([
         "colmap", "feature_extractor",
         "--database_path", database,
         "--image_path", in_dir,
         "--SiftExtraction.use_gpu", "1",
         "--SiftExtraction.gpu_index", "0",
+        "--SiftExtraction.max_image_size", "2400",
+        "--SiftExtraction.max_num_features", "8192",
+        "--SiftExtraction.peak_threshold", "0.006666666666666667",
+        "--SiftExtraction.edge_threshold", "10",
         "--ImageReader.single_camera", "1",
         "--ImageReader.camera_model", "SIMPLE_RADIAL"
     ], check=True)
     echo("COLMAP: Feature extraction completed.")
 
+    # Step 3: Feature matching (enhanced)
     subprocess.run([
         "colmap", "exhaustive_matcher",
         "--database_path", database,
-        "--SiftMatching.max_ratio", "0.6",
         "--SiftMatching.use_gpu", "1",
-        "--SiftMatching.gpu_index", "0"
+        "--SiftMatching.gpu_index", "0",
+        "--SiftMatching.max_ratio", "0.6",
+        "--SiftMatching.cross_check", "1",
+        "--SiftMatching.guided_matching", "1",
+        #"--SequentialMatching.overlap", "10", # Only for Sequential
+        #"--SequentialMatching.quadratic_overlap", "1" # Only for Sequential
     ], check=True)
     echo("COLMAP: Feature matching completed.")
 
+    # Step 4: Mapping (refined)
     subprocess.run([
         "colmap", "mapper",
         "--database_path", database,
@@ -123,11 +137,17 @@ def run_colmap_pipeline(in_dir, database):
         "--output_path", sparse_dir,
         "--Mapper.num_threads", "40",
         "--Mapper.abs_pose_min_num_inliers", "15",
-        "--Mapper.tri_min_angle", "2.5",
         "--Mapper.abs_pose_min_inlier_ratio", "0.15",
-        "--Mapper.ba_global_max_num_iterations", "50",
+        "--Mapper.tri_min_angle", "2.5",
+        "--Mapper.init_min_num_inliers", "100",
+        "--Mapper.init_num_trials", "200",
+        "--Mapper.ba_global_max_num_iterations", "75",
         "--Mapper.ba_global_max_refinements", "5",
-        "--Mapper.ba_global_max_refinement_change", "0.0005"
+        "--Mapper.ba_global_max_refinement_change", "0.0005",
+        "--Mapper.extract_colors", "1",
+        "--Mapper.fix_existing_images", "0",
+        "--Mapper.tri_ignore_two_view_tracks", "1",
+        "--Mapper.min_num_matches", "15"
     ], check=True)
     echo("COLMAP: Mapping completed.")
 
@@ -164,7 +184,8 @@ def prepare_colmap_data_for_splatfacto(in_dir, out_dir, colmap_dir):
             os.remove(original)
         os.rename(filtered, original)
 
-        print(f"Images used for training: {int(len(os.listdir(os.path.join(train_data_dir, 'images'))) * img_factor_to_remain)}")
+        print(f"\033[92mImages used for training: {int(len(os.listdir(os.path.join(train_data_dir, 'images'))) * img_factor_to_remain)}\033[0m")
+
 
 
 #---------------------------------------------------------------------------------------------------------------------------
@@ -183,11 +204,11 @@ def write_result_data():
 def run_splatfacto(in_dir):
     echo("Starting SplatFacto training...")
     subprocess.run([
-        "ns-train", "splatfacto-big",
-        "--max-num-iterations", "30000",
-        "--pipeline.model.cull_alpha_thresh", "0.02", #Default 0.005
+        "ns-train", "splatfacto",
+        "--max-num-iterations", "15000",
+        "--pipeline.model.cull_alpha_thresh", "0.05", #Default 0.005
         "--pipeline.model.stop_screen_size_at" ,"4000", #Default 4000
-        "--pipeline.model.cull_scale_thresh", "0.1",  #Default 0.5
+        "--pipeline.model.cull_scale_thresh", "0.2",  #Default 0.5
         "--pipeline.model.reset_alpha_every", "50",  #Default 30
         "--pipeline.model.use_scale_regularization", "True",
         "--viewer.websocket-port", "None",
@@ -230,61 +251,66 @@ def export_ply():
 #---------------------------------------------------------------------------------------------------------------------------
 # Execute pipeline based on wished input and result
 #---------------------------------------------------------------------------------------------------------------------------
-print(f"Starting pipeline: {pipeline_type} with is_big_dataset set to: {is_big_dataset}")
+print(f"\033[92mStarting pipeline: {pipeline_type} with is_big_dataset set to: {is_big_dataset}\033[0m")
 
-if pipeline_type == "mp4_to_images":
-    extract_useful_images(input_data_dir, extracted_images_dir)
+
+try:
+    if pipeline_type == "mp4_to_images":
+        extract_useful_images(input_data_dir, extracted_images_dir)
+        write_result_data()
+
+    elif pipeline_type == "mp4_to_colmap":
+        extract_useful_images(input_data_dir, extracted_images_dir)
+        run_colmap_pipeline(extracted_images_dir, db_path)
+        write_result_data()
+
+    elif pipeline_type == "mp4_to_transforms":
+        extract_useful_images(input_data_dir, extracted_images_dir)
+        run_colmap_pipeline(extracted_images_dir, db_path)
+        prepare_colmap_data_for_splatfacto(extracted_images_dir, train_data_dir, os.path.join(sparse_dir, "0"))
+        write_result_data()
+
+    elif pipeline_type == "mp4_to_splat":
+        extract_useful_images(input_data_dir, extracted_images_dir)
+        run_colmap_pipeline(extracted_images_dir, db_path)
+        prepare_colmap_data_for_splatfacto(extracted_images_dir, train_data_dir, os.path.join(sparse_dir, "0"))
+        write_result_data()
+        run_splatfacto(train_data_dir)
+        export_ply()
+
+    elif pipeline_type == "images_to_colmap":
+        run_colmap_pipeline(input_data_dir, db_path)
+        write_result_data()
+
+    elif pipeline_type == "images_to_transforms":
+        run_colmap_pipeline(input_data_dir, db_path)
+        prepare_colmap_data_for_splatfacto(input_data_dir, train_data_dir, os.path.join(sparse_dir, "0"))
+        write_result_data()
+
+    elif pipeline_type == "images_to_splat":
+        run_colmap_pipeline(input_data_dir, db_path)
+        prepare_colmap_data_for_splatfacto(input_data_dir, train_data_dir, os.path.join(sparse_dir, "0"))
+        write_result_data()
+        run_splatfacto(train_data_dir)
+        export_ply()
+
+    elif pipeline_type == "colmap_to_transforms":
+        prepare_colmap_data_for_splatfacto(os.path.join(input_data_dir, "images"), train_data_dir, os.path.join(input_data_dir, "sparse/0"))
+        write_result_data()
+
+    elif pipeline_type == "colmap_to_splat":
+        prepare_colmap_data_for_splatfacto(os.path.join(input_data_dir, "images"), train_data_dir, os.path.join(input_data_dir, "sparse/0"))
+        write_result_data()
+        run_splatfacto(train_data_dir)
+        export_ply()
+
+    elif pipeline_type == "transforms_to_splat":
+        run_splatfacto(input_data_dir)
+        export_ply()
+
+except subprocess.CalledProcessError as e:
+    print(f"\n\033[91mPipeline failed: {e}\033[0m")
     write_result_data()
-
-if pipeline_type == "mp4_to_colmap":
-    extract_useful_images(input_data_dir, extracted_images_dir)
-    run_colmap_pipeline(extracted_images_dir, db_path)
-    write_result_data()
-
-if pipeline_type == "mp4_to_transforms":
-    extract_useful_images(input_data_dir, extracted_images_dir)
-    run_colmap_pipeline(extracted_images_dir, db_path)
-    prepare_colmap_data_for_splatfacto(extracted_images_dir, train_data_dir, os.path.join(sparse_dir, "0"))
-    write_result_data()
-
-if pipeline_type == "mp4_to_splat":
-    extract_useful_images(input_data_dir, extracted_images_dir)
-    run_colmap_pipeline(extracted_images_dir, db_path)
-    prepare_colmap_data_for_splatfacto(extracted_images_dir, train_data_dir, os.path.join(sparse_dir, "0"))
-    write_result_data()
-    run_splatfacto(train_data_dir)
-    export_ply()
-
-if pipeline_type == "images_to_colmap":
-    run_colmap_pipeline(input_data_dir, db_path)
-    write_result_data()
-
-if pipeline_type == "images_to_transforms":
-    run_colmap_pipeline(input_data_dir, db_path)
-    prepare_colmap_data_for_splatfacto(input_data_dir, train_data_dir, os.path.join(sparse_dir, "0"))
-    write_result_data()
-
-if pipeline_type == "images_to_splat":
-    run_colmap_pipeline(input_data_dir, db_path)
-    prepare_colmap_data_for_splatfacto(input_data_dir, train_data_dir, os.path.join(sparse_dir, "0"))
-    write_result_data()
-    run_splatfacto(train_data_dir)
-    export_ply()
-
-if pipeline_type == "colmap_to_transforms":
-    prepare_colmap_data_for_splatfacto(os.path.join(input_data_dir, "images"), train_data_dir, os.path.join(input_data_dir, "sparse/0"))
-    write_result_data()
-
-if pipeline_type == "colmap_to_splat":
-    prepare_colmap_data_for_splatfacto(os.path.join(input_data_dir, "images"), train_data_dir, os.path.join(input_data_dir, "sparse/0"))
-    write_result_data()
-    run_splatfacto(train_data_dir)
-    export_ply()
-
-if pipeline_type == "transforms_to_splat":
-    run_splatfacto(input_data_dir)
-    export_ply()
-
 #---------------------------------------------------------------------------------------------------------------------------
 # Done
 #---------------------------------------------------------------------------------------------------------------------------
