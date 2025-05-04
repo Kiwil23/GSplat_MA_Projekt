@@ -8,11 +8,13 @@ import argparse
 #---------------------------------------------------------------------------------------------------------------------------
 parser = argparse.ArgumentParser()
 parser.add_argument("--pipeline_type", default="mp4_to_splat")
+parser.add_argument("--extra_cleanup", default="False")
 parser.add_argument("--is_big_dataset", default="False")
 args = parser.parse_args()
 
 pipeline_type = args.pipeline_type
 is_big_dataset = args.is_big_dataset.lower() == "true"
+extra_cleanup = args.extra_cleanup.lower() == "true"
 
 
 #---------------------------------------------------------------------------------------------------------------------------
@@ -78,7 +80,7 @@ def extract_useful_images(in_dir, out_dir):
 
 
     # Does a extra cleanup of blury images but can fail on small datasets
-    if is_big_dataset:
+    if extra_cleanup:
         echo("Filtering to retain top 95'%' sharpest images...")
         subprocess.run([
             "python", os.path.join(pipeline_scripts_dir, "01_filter_raw_data.py"),
@@ -107,7 +109,7 @@ def run_colmap_pipeline(in_dir, database):
         "--SiftExtraction.use_gpu", "1",
         "--SiftExtraction.gpu_index", "0",
         "--SiftExtraction.max_image_size", "2400",
-        "--SiftExtraction.max_num_features", "8192",
+        "--SiftExtraction.max_num_features", "8192", # Maybe needs to be higher for bigger scene
         "--SiftExtraction.peak_threshold", "0.006666666666666667",
         "--SiftExtraction.edge_threshold", "10",
         "--ImageReader.single_camera", "1",
@@ -167,7 +169,7 @@ def prepare_colmap_data_for_splatfacto(in_dir, out_dir, colmap_dir):
 
     # Choses a smaller image amount for training but can fail on small datasets
     if is_big_dataset:
-        img_factor_to_remain = 0.7
+        img_factor_to_remain = 0.5
         echo("Filtering images for training...")
         subprocess.run([
             "python", os.path.join(pipeline_scripts_dir, "02_filter_colmap_data.py"),
@@ -251,7 +253,7 @@ def export_ply():
 #---------------------------------------------------------------------------------------------------------------------------
 # Execute pipeline based on wished input and result
 #---------------------------------------------------------------------------------------------------------------------------
-print(f"\033[92mStarting pipeline: {pipeline_type} with is_big_dataset set to: {is_big_dataset}\033[0m")
+print(f"\033[92mStarting pipeline: {pipeline_type} and extra cleanup: {extra_cleanup} with is_big_dataset set to: {is_big_dataset}\033[0m")
 
 
 try:

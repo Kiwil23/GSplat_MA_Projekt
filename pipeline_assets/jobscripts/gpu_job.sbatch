@@ -26,4 +26,5 @@ enroot start \
     $INSTANCE \
      python3 /mnt/pipeline_scripts/pipeline.py \
     --pipeline_type="mp4_to_splat" \
+    --extra_cleanup="True" \
     --is_big_dataset="True" && echo "pipeline.py done"
