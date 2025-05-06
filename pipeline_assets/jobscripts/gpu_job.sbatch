@@ -26,5 +26,7 @@ enroot start \
     $INSTANCE \
      python3 /mnt/pipeline_scripts/pipeline.py \
     --pipeline_type="mp4_to_splat" \
-    --extra_cleanup="True" \
-    --is_big_dataset="True" && echo "pipeline.py done"
+    --pre_filter_img="50" \
+    --post_filter_img="50" \
+    --train_img_percentage="50" \
+    && echo "pipeline.py done"

@@ -7,8 +7,10 @@ docker run -it --gpus all \
   -p 7007:7007  \
   splat_tools_slim \
   python3 /mnt/pipeline_scripts/pipeline.py \
-  --pipeline_type="mp4_to_transforms" \
-  --extra_cleanup="True" \
-  --is_big_dataset="True" && echo "pipeline.py done"
+  --pipeline_type="mp4_to_splat" \
+  --pre_filter_img="50" \
+  --post_filter_img="50" \
+  --train_img_percentage="50" \
+  && echo "pipeline.py done"
 
 
