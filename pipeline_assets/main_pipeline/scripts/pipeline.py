@@ -356,7 +356,7 @@ try:
         write_result_data()
 
     elif pipeline_type == "colmap_to_splat":
-        prepare_colmap_data_for_splatfacto(os.path.join(input_data_dir, "images"), train_data_dir, os.path.join(input_data_dir, "sparse/0"))
+        prepare_colmap_data_for_splatfacto(os.path.join(input_data_dir, "images"), train_data_dir, os.path.join(input_data_dir, "sparse/1"))
         write_result_data()
         run_splatfacto(train_data_dir)
         export_ply()
