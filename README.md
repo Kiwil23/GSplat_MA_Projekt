@@ -114,13 +114,13 @@ input_data/
 |----------------------------|---------------------------------------------------------------|
 | `--pipeline_type="transforms_to_splat"`      | vollständige Pipeline inkl. .ply für Training                |
 
-#### Zusätzliche Filterung (experimentell):
+#### Zusätzliche Filterung:
 
 | Option             | Wirkung                                                                   |
 |--------------------|---------------------------------------------------------------------------|
-| `--is_big_dataset="True"`  | zusätzliche Filterung, nur bei großen Datensätzen z.B. Video über 1 min |
-| `--is_big_dataset="False"` | (Default) empfohlen für kleinere Datensätze               |
-
+| `--pre_filter_img`  |Filterung vor raft_extractor Bilderauswahl z.B. --pre_filter_img="30" Behalte 30% der schärften Bilder (zusätzlich feste 5 % extra Filterung von unbrauchbaren Bildern  |
+| `--post_filter_img` |Filterung nach raft_extractor Bilderauswahl z.B. --pre_filter_img="60" Behalte 60% der schärften Bilder  |
+|`--train_img_percentage`|Vie viele Bilder für das Splat Training genutzt werden z.B. --train_img_percentage="90" Trainiere den Splat mit 90% der verbleibenden Bilder |
 #### Pipeline starten:
 
 ```bash
@@ -142,7 +142,14 @@ Beheben mit:
 sed -i 's/\r$//' gpu_job.sbatch
 sbatch gpu_job.sbatch
 ```
-
+```
+Sicherstellen das die Pointcloud in sparse/0 liegt
+Sollte Sie z.B. in sparse/1 liegen, alle anderen Pointcloud Ordner löschen
+und in Pipeline.py für den gewünschten Schritt bei prepare_colmap_data_for_splatfacto()
+os.path.join(input_data_dir, "sparse/0")) ---> os.path.join(input_data_dir, "sparse/1"))
+Auch bei prepare_colmap_data_for_splatfacto() sicherstellen das die richtigen colmap images verwendet werden, der von prepare_colmap_data_for_splatfacto()
+generierte Ordner "images" entspricht nicht den colmap images. Die von colmap verwendeten Bilder sind in extracted_images sofern nicht ohnehin noch in inputdata.
+```
 ---
 
 ### 🧩 scripts-Verzeichnis
