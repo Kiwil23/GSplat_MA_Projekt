@@ -147,6 +147,8 @@ Sicherstellen das die Pointcloud in sparse/0 liegt
 Sollte Sie z.B. in sparse/1 liegen, alle anderen Pointcloud Ordner löschen
 und in Pipeline.py für den gewünschten Schritt bei prepare_colmap_data_for_splatfacto()
 os.path.join(input_data_dir, "sparse/0")) ---> os.path.join(input_data_dir, "sparse/1"))
+Auch bei prepare_colmap_data_for_splatfacto() sicherstellen das die richtigen colmap images verwendet werden, der von prepare_colmap_data_for_splatfacto()
+generierte Ordner "images" entspricht nicht den colmap images. Die von colmap verwendeten Bilder sind in extracted_images sofern nicht ohnehin noch in inputdata.
 ```
 ---
 
