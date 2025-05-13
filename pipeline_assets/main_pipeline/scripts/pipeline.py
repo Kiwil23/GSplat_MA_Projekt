@@ -198,8 +198,8 @@ def run_colmap_pipeline(in_dir, database):
         "--Mapper.abs_pose_min_num_inliers", "15",
         "--Mapper.abs_pose_min_inlier_ratio", "0.15",
         "--Mapper.tri_min_angle", "2.5",
-        "--Mapper.init_min_num_inliers", "100",
-        "--Mapper.init_num_trials", "200",
+        "--Mapper.init_min_num_inliers", "60", # changed from 100
+        "--Mapper.init_num_trials", "5000", # Changed from  200
         "--Mapper.ba_global_max_num_iterations", "60", # Changed from 75
         "--Mapper.ba_global_max_refinements", "1", # Changed from 5
         "--Mapper.ba_global_max_refinement_change", "0.0005",
@@ -266,8 +266,8 @@ def run_splatfacto(in_dir):
         "--max-num-iterations", "15000",
         "--pipeline.model.cull_alpha_thresh", "0.05",
         "--pipeline.model.stop_screen_size_at", "4000",
-        "--pipeline.model.cull_scale_thresh", "0.2",
-        "--pipeline.model.reset_alpha_every", "50",
+        "--pipeline.model.cull_scale_thresh", "0.05",
+        "--pipeline.model.reset_alpha_every", "60",
         "--pipeline.model.use_scale_regularization", "True",
         "--viewer.quit-on-train-completion", "True",
         "--output-dir", result_data_dir,
