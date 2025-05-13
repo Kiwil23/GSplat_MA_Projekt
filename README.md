@@ -118,7 +118,7 @@ input_data/
 
 | Option             | Wirkung                                                                   |
 |--------------------|---------------------------------------------------------------------------|
-| `--is_big_dataset="True"`  | zusätzliche Filterung, nur bei großen Datensätzen z.B. Video über 1 min |
+| `--pre_filter_img`  |z.B --pre_filter_img ="30" Behalte 30% der schärften Bilder (feste 5 % extra Filterung von unbrauchbaren Bildern  |
 | `--is_big_dataset="False"` | (Default) empfohlen für kleinere Datensätze               |
 
 #### Pipeline starten:
