@@ -143,8 +143,8 @@ sed -i 's/\r$//' gpu_job.sbatch
 sbatch gpu_job.sbatch
 ```
 ```
-Sicherstellen das die Pointcloud in Sparse/0 liegt
-Sollte Sie z.B. in Sparse/1 liegen, alles anderen Ordner löschen
+Sicherstellen das die Pointcloud in sparse/0 liegt
+Sollte Sie z.B. in sparse/1 liegen, alle anderen Pointcloud Ordner löschen
 und in Pipeline.py für den gewünschten Schritt bei prepare_colmap_data_for_splatfacto()
 os.path.join(input_data_dir, "sparse/0")) ---> os.path.join(input_data_dir, "sparse/1"))
 ```
