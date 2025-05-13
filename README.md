@@ -120,7 +120,7 @@ input_data/
 |--------------------|---------------------------------------------------------------------------|
 | `--pre_filter_img`  |Filterung vor raft_extractor Bilderauswahl z.B. --pre_filter_img="30" Behalte 30% der schärften Bilder (zusätzlich feste 5 % extra Filterung von unbrauchbaren Bildern  |
 | `--post_filter_img` |Filterung nach raft_extractor Bilderauswahl z.B. --pre_filter_img="60" Behalte 60% der schärften Bilder  |
-| `--train_img_percentage` |Vie viele Bilder für das Splat Training genutzt werden z.B. --train_img_percentage="90" Trainiere den Splat mit 90% der verbleibenden Bilder |
+|`--train_img_percentage`|Vie viele Bilder für das Splat Training genutzt werden z.B. --train_img_percentage="90" Trainiere den Splat mit 90% der verbleibenden Bilder |
 #### Pipeline starten:
 
 ```bash
