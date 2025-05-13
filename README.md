@@ -114,7 +114,7 @@ input_data/
 |----------------------------|---------------------------------------------------------------|
 | `--pipeline_type="transforms_to_splat"`      | vollständige Pipeline inkl. .ply für Training                |
 
-#### Zusätzliche Filterung (experimentell):
+#### Zusätzliche Filterung:
 
 | Option             | Wirkung                                                                   |
 |--------------------|---------------------------------------------------------------------------|
