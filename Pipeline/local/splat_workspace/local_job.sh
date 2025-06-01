@@ -6,15 +6,15 @@ TRAIN_IMG_PERCENTAGE=${3:-100}
 TRAIN_ITERS=${4:-10000}
 
 #------------CHANE TO YOUR PATH---------------
-USER_PATH=/mnt/c/Users/rohes/Desktop/a/local/splat_workspace
+USER_PATH="Path_To_Your/GSplat_MA_Projekt"
 #------------CHANE TO YOUR PATH---------------
 
 docker run --rm -it --gpus all \
-  -v $USER_PATH/input_data:/mnt/input_data \
-  -v $USER_PATH/result_data:/mnt/result_data \
-  -v $USER_PATH/scripts:/mnt/pipeline_scripts \
+  -v $USER_PATH/Pipeline/local/splat_workspace/input_data:/mnt/input_data \
+  -v $USER_PATH/Pipeline/local/splat_workspace/result_data:/mnt/result_data \
+  -v $USER_PATH/Pipeline/local/splat_workspace/scripts:/mnt/pipeline_scripts \
   -p 7007:7007  \
-  splat_tools_slim \
+  kiwil23/splat_tools_slim \
      python3 /mnt/pipeline_scripts/pipeline.py \
     --pipeline_type="mp4_to_splat" \
     --pre_filter_img="$PRE_FILTER" \
