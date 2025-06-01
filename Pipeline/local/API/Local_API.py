@@ -123,9 +123,7 @@ def upload_video():
     Endpoint to upload a video file and start a job to process it.
     Rejects new jobs if one is already running.
     """
-    clear_directory(UPLOAD_FOLDER)
-    clear_directory("../splat_workspace/input_data")
-    clear_directory(DOWNLOAD_FOLDER)
+
     global job_running
 
     with job_lock:
@@ -145,6 +143,9 @@ def upload_video():
             job_running = False
         return "No file selected.", 400
 
+    clear_directory(UPLOAD_FOLDER)
+    clear_directory("../splat_workspace/input_data")
+    clear_directory(DOWNLOAD_FOLDER)
     # Save the uploaded file
     save_path = os.path.join(UPLOAD_FOLDER, video.filename)
     video.save(save_path)

@@ -1,0 +1,17 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Basistheme für deine App -->
+    <style name="Theme.SplatScan" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Anpassen der Farben für dein Theme -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+
+        <!-- Optional: Anpassung von Textfarben und Hintergründen -->
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
+
+    </style>
+
+</resources>

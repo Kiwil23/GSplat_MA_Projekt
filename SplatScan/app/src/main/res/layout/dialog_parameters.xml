@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/keepPreInput"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:hint="Keep % Images for preproccessing (e.g. 50)"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/keepPostInput"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:hint="Keep % Images after preproccessing (e.g. 80)"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/imagesInput"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:hint="Use % Images for training the splat (e.g. 50)"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/iterationsInput"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:hint="Trainingsiteration for splat (e.g. 30000)"
+        android:inputType="number" />
+
+</LinearLayout>

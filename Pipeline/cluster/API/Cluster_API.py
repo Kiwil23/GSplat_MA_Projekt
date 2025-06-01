@@ -149,8 +149,6 @@ def safe_int(value, default):
 def upload_video():
     """Upload endpoint: accepts a video and starts a cluster job if idle."""
     
-    clear_directory(UPLOAD_FOLDER)
-    clear_directory(DOWNLOAD_FOLDER)
     global job_running
 
     with job_lock:
@@ -168,7 +166,9 @@ def upload_video():
         with job_lock:
             job_running = False
         return "No selected file.", 400
-
+    
+    clear_directory(UPLOAD_FOLDER)
+    clear_directory(DOWNLOAD_FOLDER)
     save_path = os.path.join(UPLOAD_FOLDER, video.filename)
     video.save(save_path)
     print(f"Video saved to: {save_path}")
