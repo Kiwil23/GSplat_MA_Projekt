@@ -10,8 +10,13 @@ Create Account zrok invite
 Enable your zrok Acc on your device zrok enable <your Token>
 Reserve your own custom subdomian zrok reserve public localhost:8080 --unique-name <your_subdomain_name>
 You can release the reservation with zrok release <your_subdomain_name>
+In GSplat_MA_Projet/Pipeline/cluster/splat_workspace/gpu_job.sbatch change USER_PATH to your cluster home directory
+Copy the GSplat_MA_Projet/Pipeline/cluster/splat_workspace folder to your cluster home direcory and remove the .gitkeep from input_data and result_data
+
 
 For local use you need to install docker and make sure you have a cuda nvidia GPU
+In GSplat_MA_Projet/Pipeline/local/splat_workspace/local_job.sh change USER_PATH to your save Path
+
 
 
 
