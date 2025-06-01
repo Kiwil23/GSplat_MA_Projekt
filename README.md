@@ -60,7 +60,7 @@ zrok enable <your_token>
 zrok reserve public localhost:8080 --unique-name <your_subdomain_name>
 ```
 
-5. You can release a reservation:
+5. You can release a reservation with:
 
 ```bash
 zrok release <your_subdomain_name>
