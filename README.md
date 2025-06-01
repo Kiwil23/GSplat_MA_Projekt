@@ -1,25 +1,118 @@
 # GSplat_MA_Projekt
 
-## Setup
-clone Repo git clone https://github.com/Kiwil23/GSplat_MA_Projekt.git
-1. Install flask and paramiko or create a new conda enviroment
-2. conda env create -f environment.yml
-3. conda activate splat_pipeline
-Install zrok https://docs.zrok.io/docs/guides/install/
-Create Account zrok invite
-Enable your zrok Acc on your device zrok enable <your Token>
-Reserve your own custom subdomian zrok reserve public localhost:8080 --unique-name <your_subdomain_name>
-You can release the reservation with zrok release <your_subdomain_name>
-In GSplat_MA_Projet/Pipeline/cluster/splat_workspace/gpu_job.sbatch change USER_PATH to your cluster home directory
-Copy the GSplat_MA_Projet/Pipeline/cluster/splat_workspace folder to your cluster home direcory and remove the .gitkeep from input_data and result_data
+# 📦 GSplat MA Projekt – Setup Guide
 
-Enable USB Debuggin on your phone and connect with Computer
-Install Android Studio and open the folder SplatScan
-Run the App on your Device
- 
-For local use you need to install docker and make sure you have a cuda nvidia GPU
-In GSplat_MA_Projet/Pipeline/local/splat_workspace/local_job.sh change USER_PATH to your save Path
-remove the .gitkeep from input_data and result_data
+## 🔧 Setup Instructions
+
+### 📁 Clone the Repository
+
+```bash
+git clone https://github.com/Kiwil23/GSplat_MA_Projekt.git
+cd GSplat_MA_Projekt
+```
+
+---
+
+### 🐍 Conda Environment Setup
+
+1. Create and activate the environment:
+
+```bash
+conda env create -f environment.yml
+conda activate splat_pipeline
+```
+
+2. Alternatively, install dependencies manually:
+
+```bash
+pip install flask paramiko
+```
+
+---
+
+### 🌐 Zrok Setup
+
+1. Install zrok  
+   → https://docs.zrok.io/docs/guides/install/
+
+2. Create a zrok account:
+
+```bash
+zrok invite
+```
+
+3. Enable your zrok account:
+
+```bash
+zrok enable <your_token>
+```
+
+4. Reserve a custom subdomain:
+
+```bash
+zrok reserve public localhost:8080 --unique-name <your_subdomain_name>
+```
+
+5. Release the reservation when done:
+
+```bash
+zrok release <your_subdomain_name>
+```
+
+---
+
+### 🖥️ Cluster Setup
+
+1. In `Pipeline/cluster/splat_workspace/gpu_job.sbatch`, update:
+
+```text
+USER_PATH  → your cluster home directory
+```
+
+2. Copy the folder `Pipeline/cluster/splat_workspace` to your cluster home directory.
+
+3. Remove the `.gitkeep` files from:
+
+```
+input_data/
+result_data/
+```
+
+---
+
+### 📱 Android App Setup
+
+1. Enable USB Debugging on your phone and connect it to your computer.
+
+2. Install Android Studio and open the folder:
+
+```
+SplatScan/
+```
+
+3. Run the app on your device.
+
+---
+
+### 🖥️ Local Setup with Docker (for NVIDIA GPU only)
+
+1. Make sure Docker is installed and your system has a CUDA-compatible NVIDIA GPU.
+
+2. In `Pipeline/local/splat_workspace/local_job.sh`, update:
+
+```text
+USER_PATH  → your preferred save path
+```
+
+3. Remove the `.gitkeep` files from:
+
+```
+input_data/
+result_data/
+```
+
+---
+
 
 
 
