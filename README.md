@@ -56,7 +56,7 @@ zrok enable <your_token>
 zrok reserve public localhost:8080 --unique-name <your_subdomain_name>
 ```
 
-5. Release a reservation:
+5. You can release a reservation:
 
 ```bash
 zrok release <your_subdomain_name>
@@ -145,28 +145,28 @@ result_data/
 
 ---
 
-## ▶️ Pipeline Usage
+## ▶️ Manual Pipeline Usage
 
-In `gpu_job.sbatch`, set the desired `--pipeline_type`:
+In `gpu_job.sbatch` or ,`local_job.sh` set the desired `--pipeline_type`:
 
-### 🎥 From MP4 videos:
+### 🎥 For MP4 videos in /input_data:
 
-| Argument                              | Description                              |
+| Argument                              | Result                              |
 | ------------------------------------- | ---------------------------------------- |
-| `--pipeline_type="mp4_to_images"`     | Extract frames                           |
-| `--pipeline_type="mp4_to_colmap"`     | Run COLMAP                               |
-| `--pipeline_type="mp4_to_transforms"` | Prepare for Splatfacto                   |
+| `--pipeline_type="mp4_to_images"`     | Extracted frames                           |
+| `--pipeline_type="mp4_to_colmap"`     | COLMAP data                              |
+| `--pipeline_type="mp4_to_transforms"` | Prepared train data for Splatfacto                   |
 | `--pipeline_type="mp4_to_splat"`      | (Default) Full pipeline with .ply output |
 
-### 🖼️ From Images:
+### 🖼️ For individual Images in /input_data:
 
-| Argument                                 | Description                    |
+| Argument                                 | Result                    |
 | ---------------------------------------- | ------------------------------ |
-| `--pipeline_type="images_to_colmap"`     | Run COLMAP                     |
-| `--pipeline_type="images_to_transforms"` | Prepare for Splatfacto         |
+| `--pipeline_type="images_to_colmap"`     | COLMAP data                      |
+| `--pipeline_type="images_to_transforms"` | Prepared train data for Splatfacto         |
 | `--pipeline_type="images_to_splat"`      | Full pipeline with .ply output |
 
-### 🗃️ From COLMAP Data:
+### 🗃️ From COLMAP Data in /input_data:
 
 **Required Structure:**
 
@@ -174,12 +174,13 @@ In `gpu_job.sbatch`, set the desired `--pipeline_type`:
 input_data/
 ├── images/
 ├── sparse/
+|   └── 0,1,2...
 └── database.db
 ```
 
 | Argument                                 | Description                    |
 | ---------------------------------------- | ------------------------------ |
-| `--pipeline_type="colmap_to_transforms"` | Prepare for Splatfacto         |
+| `--pipeline_type="colmap_to_transforms"` | Prepared train data for Splatfacto         |
 | `--pipeline_type="colmap_to_splat"`      | Full pipeline with .ply output |
 
 ### 🗂️ From Preprocessed COLMAP Data:
@@ -199,7 +200,7 @@ input_data/
 └── transforms.json
 ```
 
-| Argument                                | Description                    |
+| Argument                                | Result                    |
 | --------------------------------------- | ------------------------------ |
 | `--pipeline_type="transforms_to_splat"` | Full pipeline with .ply output |
 
@@ -207,15 +208,15 @@ input_data/
 
 | Option                        | Description                                            |
 | ----------------------------- | ------------------------------------------------------ |
-| `--pre_filter_img="30"`       | Keep top 30% sharpest images (plus 5% extra filtering) |
-| `--post_filter_img="60"`      | Keep top 60% after RAFT filtering                      |
-| `--train_img_percentage="90"` | Use 90% of remaining images for training               |
-| `--train_iters=XXXX`          | Number of training iterations                          |
+| `--pre_filter_img="30"`       | e.g. Keep top 30% sharpest images (plus 5% extra filtering) |
+| `--post_filter_img="60"`      | e.g. Keep top 60% after RAFT filtering                      |
+| `--train_img_percentage="90"` | e.g. Use 90% of remaining images for training               |
+| `--train_iters=XXXX`          | e.g. Number of training iterations                          |
 
 ### 🔁 Start Pipeline:
 
 ```bash
-sbatch gpu_job.sbatch
+sbatch gpu_job.sbatch or ./local_job.sh
 ```
 
 ---
