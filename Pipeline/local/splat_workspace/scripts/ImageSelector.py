@@ -37,13 +37,17 @@ class ImageSelector:
         step = len(self.images) // bins
         percentages = []
 
+        #Changed
         for i in range(bins):
             start_idx = i * step
             end_idx = (i + 1) * step if i != bins - 1 else len(self.images)
             current_bin = self.images[start_idx:end_idx]
+            if len(current_bin) == 0:
+                continue  # überspringe leere Gruppen
             deleted_count = sum(1 for img in current_bin if img not in selected_images)
             avg = deleted_count / len(current_bin)
             percentages.append(avg * 100)
+
 
         draw_graph(percentages, "Distribution of to-be-deleted images")
 

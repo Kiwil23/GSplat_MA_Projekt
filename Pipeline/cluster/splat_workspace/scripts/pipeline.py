@@ -3,6 +3,7 @@ import subprocess
 import shutil
 import argparse
 import json
+from pathlib import Path
 
 # ---------------------------------------------------------------------------------------------------------------------------
 # Prepare ArgumentParser to determine the pipeline type and filter options from command-line arguments
@@ -10,39 +11,21 @@ import json
 parser = argparse.ArgumentParser()
 parser.add_argument("--pipeline_type", default="mp4_to_splat")
 parser.add_argument("--pre_filter_img", type=float, nargs='?', const=True, default=False)
-parser.add_argument("--train_img_percentage", type=float, nargs='?', const=True, default=False)
 parser.add_argument("--post_filter_img", type=float, nargs='?', const=True, default=False)
+parser.add_argument("--train_img_percentage", type=float, nargs='?', const=True, default=False)
+parser.add_argument("--train_iters", default="10000")
 
 args = parser.parse_args()
 
 pipeline_type = args.pipeline_type
 
-# pre_filter_img can be False (not set), True (only flag passed), or float
-if args.pre_filter_img is False:
-    pre_filter_img = False
-elif args.pre_filter_img is True:
-    print("Please provide a numerical value for --pre_filter_img, e.g., 80.0")
-    exit(1)
-else:
-    pre_filter_img = args.pre_filter_img / 100.0
+pre_filter_img = args.pre_filter_img / 100.0
 
-# train_img_percentage can be False (not set), True (only flag passed), or float
-if args.train_img_percentage is False:
-    train_img_percentage = False
-elif args.train_img_percentage is True:
-    print("Please provide a numerical value for --train_img_percentage, e.g., 80.0")
-    exit(1)
-else:
-    train_img_percentage = args.train_img_percentage / 100.0
+post_filter_img = args.post_filter_img / 100.0
 
-# post_filter_img can be False (not set), True (only flag passed), or float
-if args.post_filter_img is False:
-    post_filter_img = False
-elif args.post_filter_img is True:
-    print("Please provide a numerical value for --post_filter_img, e.g., 80.0")
-    exit(1)
-else:
-    post_filter_img = args.post_filter_img / 100.0
+train_img_percentage = args.train_img_percentage / 100.0
+
+train_iters = args.train_iters
 
 # ---------------------------------------------------------------------------------------------------------------------------
 # Utility function for deleting directory contents
@@ -92,7 +75,7 @@ def extract_useful_images(in_dir, out_dir):
     temp_input_dir = ""
     
     # Pre-cleanup of blurry images and reduces count of images (
-    if isinstance(pre_filter_img, float):       
+    if args.pre_filter_img != 100:       
         # Decides if input is a video or multiple images
         if len(os.listdir(in_dir)) > 1:
             input = in_dir
@@ -136,12 +119,12 @@ def extract_useful_images(in_dir, out_dir):
         "--sharpness_threshold", "10",
         "--exposure_threshold", "240"
     ], check=True)    
-    if isinstance(pre_filter_img, float):
+    if args.pre_filter_img != 100:  
         shutil.rmtree(temp_input_dir)          
     print(f"\033[92mSelected {len(os.listdir(out_dir))} images.\033[0m")
 
     # Extra cleanup of blurry images and reduces count of images
-    if isinstance(post_filter_img, float):
+    if args.post_filter_img != 100: 
         echo(f"\033[92mFiltering to retain top {post_filter_img * 100}% sharpest images\033[0m")
         subprocess.run([
             "python", os.path.join(pipeline_scripts_dir, "01_filter_raw_data.py"),
@@ -195,8 +178,8 @@ def run_colmap_pipeline(in_dir, database):
         "--image_path", in_dir,
         "--output_path", sparse_dir,
         "--Mapper.num_threads", "40",
-        "--Mapper.abs_pose_min_num_inliers", "15",
-        "--Mapper.abs_pose_min_inlier_ratio", "0.15",
+        "--Mapper.abs_pose_min_num_inliers", "15", # Changed from 30
+        "--Mapper.abs_pose_min_inlier_ratio", "0.15", # Changed from 0.25
         "--Mapper.tri_min_angle", "2.5",
         "--Mapper.init_min_num_inliers", "60", # changed from 100
         "--Mapper.init_num_trials", "5000", # Changed from  200
@@ -213,18 +196,37 @@ def run_colmap_pipeline(in_dir, database):
 # ---------------------------------------------------------------------------------------------------------------------------
 # Prepare training data and transforms.json for SplatFacto
 # ---------------------------------------------------------------------------------------------------------------------------
+def ordnergroesse_in_bytes(pfad):
+    """Calculate the size of folder content recursive."""
+    return sum(f.stat().st_size for f in pfad.rglob('*') if f.is_file())
+
 def prepare_colmap_data_for_splatfacto(in_dir, out_dir, colmap_dir):
     echo("Preparing training data for SplatFacto...")
+
+    folder_to_inspect = Path(colmap_dir)
+    # Nur Unterordner sammeln
+    subfolder = [f for f in folder_to_inspect.iterdir() if f.is_dir()]
+    folders_size = {folder: ordnergroesse_in_bytes(folder) for folder in subfolder}
+    # Größten Ordner finden
+    if folders_size:
+        biggest_folder = max(folders_size, key=folders_size.get)
+        biggest_folder_name = biggest_folder.name
+        biggest_folder_mb = folders_size[biggest_folder] / (1024 * 1024)
+        print(f"Biggest Folder: {biggest_folder_name}")
+        print(f"Size: {biggest_folder_mb:.2f} MB")
+    else:
+        print("No subfolders found.")
+
     subprocess.run([
         "ns-process-data", "images",
         "--skip-colmap",
-        "--colmap-model-path", colmap_dir,
+        "--colmap-model-path", os.path.join(colmap_dir, biggest_folder_name),
         "--data", in_dir,
         "--output_dir", out_dir
     ], check=True)
 
     # Choose a smaller image amount for training but can fail on small datasets
-    if isinstance(train_img_percentage, float):
+    if args.train_img_percentage != 100:
         echo("Filtering images for training...")
         transforms_path = os.path.join(train_data_dir, "transforms.json")
         
@@ -263,7 +265,7 @@ def run_splatfacto(in_dir):
     echo("Starting SplatFacto training...")
     subprocess.run([
         "ns-train", "splatfacto",
-        "--max-num-iterations", "15000",
+        "--max-num-iterations", train_iters,
         "--pipeline.model.cull_alpha_thresh", "0.05",
         "--pipeline.model.stop_screen_size_at", "4000",
         "--pipeline.model.cull_scale_thresh", "0.05",
@@ -305,7 +307,7 @@ def export_ply():
 # ---------------------------------------------------------------------------------------------------------------------------
 # Execute pipeline based on desired input and result
 # ---------------------------------------------------------------------------------------------------------------------------
-print(f"\033[92mStarting pipeline: {pipeline_type} with pre_filter_img set to: {pre_filter_img * 100} and post_filter_img set to: {post_filter_img * 100} and train_img_percentage set to: {train_img_percentage * 100}\033[0m")
+print(f"\033[92mStarting pipeline: {pipeline_type} with pre_filter_img set to: {pre_filter_img * 100} and post_filter_img set to: {post_filter_img * 100} and train_img_percentage set to: {train_img_percentage * 100} and Iterations: {train_iters}\033[0m")
 
 try:
     if pipeline_type == "preprocces_images":
@@ -324,13 +326,13 @@ try:
     elif pipeline_type == "mp4_to_transforms":
         extract_useful_images(input_data_dir, extracted_images_dir)
         run_colmap_pipeline(extracted_images_dir, db_path)
-        prepare_colmap_data_for_splatfacto(extracted_images_dir, train_data_dir, os.path.join(sparse_dir, "0"))
+        prepare_colmap_data_for_splatfacto(extracted_images_dir, train_data_dir, sparse_dir)
         write_result_data()
 
     elif pipeline_type == "mp4_to_splat":
         extract_useful_images(input_data_dir, extracted_images_dir)
         run_colmap_pipeline(extracted_images_dir, db_path)
-        prepare_colmap_data_for_splatfacto(extracted_images_dir, train_data_dir, os.path.join(sparse_dir, "0"))
+        prepare_colmap_data_for_splatfacto(extracted_images_dir, train_data_dir, sparse_dir)
         write_result_data()
         run_splatfacto(train_data_dir)
         export_ply()
@@ -341,22 +343,22 @@ try:
 
     elif pipeline_type == "images_to_transforms":
         run_colmap_pipeline(input_data_dir, db_path)
-        prepare_colmap_data_for_splatfacto(input_data_dir, train_data_dir, os.path.join(sparse_dir, "0"))
+        prepare_colmap_data_for_splatfacto(input_data_dir, train_data_dir, sparse_dir)
         write_result_data()
 
     elif pipeline_type == "images_to_splat":
         run_colmap_pipeline(input_data_dir, db_path)
-        prepare_colmap_data_for_splatfacto(input_data_dir, train_data_dir, os.path.join(sparse_dir, "0"))
+        prepare_colmap_data_for_splatfacto(input_data_dir, train_data_dir, sparse_dir)
         write_result_data()
         run_splatfacto(train_data_dir)
         export_ply()
 
     elif pipeline_type == "colmap_to_transforms":
-        prepare_colmap_data_for_splatfacto(os.path.join(input_data_dir, "images"), train_data_dir, os.path.join(input_data_dir, "sparse/0"))
+        prepare_colmap_data_for_splatfacto(os.path.join(input_data_dir, "images"), train_data_dir, os.path.join(input_data_dir, "sparse"))
         write_result_data()
 
     elif pipeline_type == "colmap_to_splat":
-        prepare_colmap_data_for_splatfacto(os.path.join(input_data_dir, "images"), train_data_dir, os.path.join(input_data_dir, "sparse/0"))
+        prepare_colmap_data_for_splatfacto(os.path.join(input_data_dir, "images"), train_data_dir, os.path.join(input_data_dir, "sparse"))
         write_result_data()
         run_splatfacto(train_data_dir)
         export_ply()
