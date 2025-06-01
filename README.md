@@ -154,7 +154,7 @@ result_data/
 1. **Start the API**  
    - For cluster use:  
      ```bash
-     python Pipeline/cluster/API/Cluster_API.py --url-name <Your_Zrok_Subdomain_Name>
+     python Pipeline/cluster/API/Cluster_API.py --url-name <Your_Zrok_Subdomain_Name> --cluster-path <Cluster_Home_Path>
      ```
    - For local use:  
      ```bash
