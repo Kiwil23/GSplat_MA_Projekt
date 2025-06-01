@@ -154,11 +154,13 @@ result_data/
 1. **Start the API**  
    - For cluster use:  
      ```bash
-     python Pipeline/cluster/API/Cluster_API.py --url-name <Your_Zrok_Subdomain_Name> --cluster-path <Cluster_Home_Path>
+     cd Pipeline/cluster/API
+     python Cluster_API.py --url-name <Your_Zrok_Subdomain_Name> --cluster-path <Cluster_Home_Path>
      ```
    - For local use:  
      ```bash
-     python Pipeline/local/API/Local_API.py --url-name <Your_Zrok_Subdomain_Name>
+     cd Pipeline/local/API
+     python Local_API.py --url-name <Your_Zrok_Subdomain_Name>
      ```
 
 2. **Launch the SplatScan App**  
