@@ -1,5 +1,8 @@
 # GSplat_MA_Projekt
 
+1. Cluster Frontend :  
+   👉 [https://ood-1.ai.lrz.de/pun/sys/dashboard](https://ood-1.ai.lrz.de/pun/sys/dashboard)
+
 # 📦 GSplat MA Projekt – Setup Guide
 
 ## 🔧 Setup Instructions
@@ -78,6 +81,17 @@ input_data/
 result_data/
 ```
 
+connect with Cluster, start an interactive session and get create a enroot container
+
+ssh login.ai.lrz.de -l your username
+cd splat_workspace
+salloc -p lrz-hgx-h100-94x4 --gres=gpu:1
+srun enroot import docker://kiwil23/splat_tools_slim
+exit
+
+rename the new kiwil23+splat_tools_slim.sqsh in kiwil23_splat_tools_slim.sqsh
+
+
 ---
 
 ### 📱 Android App Setup
@@ -136,8 +150,8 @@ result_data/
 
 3. Mit SSH verbinden:
    ```bash
-   ssh login.ai.lrz.de -l xxyyyzz
-   cd Containers
+   ssh login.ai.lrz.de -l your username
+   cd splat_workspace
    ```
 
 4. Interaktive Session starten:
