@@ -266,7 +266,7 @@ def run_splatfacto(in_dir):
     subprocess.run([
         "ns-train", "splatfacto",
         "--max-num-iterations", train_iters,
-        "--pipeline.model.cull_alpha_thresh", "0.05",
+        "--pipeline.model.cull_alpha_thresh", "0.01",
         "--pipeline.model.stop_screen_size_at", "4000",
         "--pipeline.model.cull_scale_thresh", "0.05",
         "--pipeline.model.reset_alpha_every", "60",
