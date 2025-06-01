@@ -1,7 +1,7 @@
 # GSplat Master's Project – Setup Guide
 
-## 🚀 Description
-This Reository contains a Colmap and Nerfstudio based Gaussian Splatting 3D reconstruction pipeline designed for efficient and high-quality 3D scene modeling from video or images. The project includes a complete processing pipeline that runs on the LRZ AI cluster or locally with NVIDIA GPUs, and features an Android app (SplatScan) to capture videos, set parameters, and upload data seamlessly for 3D reconstruction.
+## 🎨💥 Description
+This Repository contains a Colmap and Nerfstudio based Gaussian Splatting 3D reconstruction pipeline designed for efficient and high-quality 3D scene modeling from video or images. The project includes a complete processing pipeline that runs on the LRZ AI cluster or locally with NVIDIA GPUs, and features an Android app (SplatScan) to capture videos, set parameters, and upload data seamlessly for 3D reconstruction.
 
 The pipeline supports multiple input types (video, images, COLMAP data) and outputs high-fidelity 3D models (.ply files) using a modular, configurable workflow optimized for GPU acceleration.
 
