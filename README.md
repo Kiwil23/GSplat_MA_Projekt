@@ -1,7 +1,7 @@
 # GSplat_MA_Projekt
 
 ## Setup
-clone Repo 
+clone Repo git clone https://github.com/Kiwil23/GSplat_MA_Projekt.git
 1. Install flask and paramiko or create a new conda enviroment
 2. conda env create -f environment.yml
 3. conda activate splat_pipeline
@@ -10,6 +10,12 @@ Create Account zrok invite
 Enable your zrok Acc on your device zrok enable <your Token>
 Reserve your own custom subdomian zrok reserve public localhost:8080 --unique-name <your_subdomain_name>
 You can release the reservation with zrok release <your_subdomain_name>
+
+For local use you need to install docker and make sure you have a cuda nvidia GPU
+
+
+
+
 
 
 
