@@ -61,7 +61,7 @@ zrok release <your_subdomain_name>
 
 ---
 
-### 🖥️ Cluster Setup
+### 🖥️ LRZ AI Systems Cluster Setup
 
 1. In `Pipeline/cluster/splat_workspace/gpu_job.sbatch`, update:
 
@@ -94,7 +94,7 @@ SplatScan/
 
 ---
 
-### 🖥️ Local Setup with Docker (for NVIDIA GPU only)
+### 🖥️ For a Local Setup with Docker (for NVIDIA GPU only)
 
 1. Make sure Docker is installed and your system has a CUDA-compatible NVIDIA GPU.
 
