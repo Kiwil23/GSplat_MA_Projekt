@@ -13,9 +13,14 @@ You can release the reservation with zrok release <your_subdomain_name>
 In GSplat_MA_Projet/Pipeline/cluster/splat_workspace/gpu_job.sbatch change USER_PATH to your cluster home directory
 Copy the GSplat_MA_Projet/Pipeline/cluster/splat_workspace folder to your cluster home direcory and remove the .gitkeep from input_data and result_data
 
-
+Enable USB Debuggin on your phone and connect with Computer
+Install Android Studio and open the folder SplatScan
+Run the App on your Device
+ 
 For local use you need to install docker and make sure you have a cuda nvidia GPU
 In GSplat_MA_Projet/Pipeline/local/splat_workspace/local_job.sh change USER_PATH to your save Path
+remove the .gitkeep from input_data and result_data
+
 
 
 
