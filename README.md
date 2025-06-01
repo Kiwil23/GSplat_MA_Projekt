@@ -1,17 +1,14 @@
 # GSplat Master's Project – Setup Guide
 
-## 🚀 Description
-
-Access the LRZ Cluster Dashboard:
-👉 [https://ood-1.ai.lrz.de/pun/sys/dashboard](https://ood-1.ai.lrz.de/pun/sys/dashboard)
-
-This Reository contains a Gaussian Splatting-based 3D reconstruction pipeline designed for efficient and high-quality 3D scene modeling from video or images. The project includes a complete processing pipeline that runs on the LRZ AI cluster or locally with NVIDIA GPUs, and features an Android app (SplatScan) to capture videos, set parameters, and upload data seamlessly for 3D reconstruction.
+## 🎨💥 Description
+This Repository contains a Colmap and Nerfstudio based Gaussian Splatting 3D reconstruction pipeline designed for efficient and high-quality 3D scene modeling from video or images. The project includes a complete processing pipeline that runs on the LRZ AI cluster or locally with NVIDIA GPUs, and features an Android app (SplatScan) to capture videos, set parameters, and upload data seamlessly for 3D reconstruction.
 
 The pipeline supports multiple input types (video, images, COLMAP data) and outputs high-fidelity 3D models (.ply files) using a modular, configurable workflow optimized for GPU acceleration.
 
 ---
 
-## 📦 Project Setup Instructions
+## 📦 Project Setup Instructions  
+To Work with LRZ AI Sytems you need eduVPN and connect with "Münchner Wissenschaftsnetz LRZ-VPN" 
 
 ### 📁 Clone Repository
 
@@ -154,11 +151,13 @@ result_data/
 1. **Start the API**  
    - For cluster use:  
      ```bash
-     python Pipeline/cluster/API/Cluster_API.py --url-name <Your_Zrok_Subdomain_Name> --cluster-path <Cluster_Home_Path>
+     cd Pipeline/cluster/API
+     python Cluster_API.py --url-name <Your_Zrok_Subdomain_Name> --cluster-path <Cluster_Home_Path>
      ```
    - For local use:  
      ```bash
-     python Pipeline/local/API/Local_API.py --url-name <Your_Zrok_Subdomain_Name>
+     cd Pipeline/local/API
+     python Local_API.py --url-name <Your_Zrok_Subdomain_Name>
      ```
 
 2. **Launch the SplatScan App**  
@@ -278,3 +277,5 @@ sbatch: error: instead of expected UNIX line breaks (\n).
 sed -i 's/\r$//' gpu_job.sbatch
 sbatch gpu_job.sbatch
 ```
+Access the LRZ Cluster Dashboard:
+👉 [https://ood-1.ai.lrz.de/pun/sys/dashboard](https://ood-1.ai.lrz.de/pun/sys/dashboard) 
