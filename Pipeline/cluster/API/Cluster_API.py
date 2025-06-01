@@ -16,7 +16,7 @@ app = Flask(__name__)
 # Local folders
 UPLOAD_FOLDER = 'uploads'
 DOWNLOAD_FOLDER = 'downloads'
-CLUSTER_PATH_INPUT = '/dss/dsshome1/09/di97yuz'
+CLUSTER_PATH = '/dss/dsshome1/09/di97yuz'
 URL_NAME = 'splatscan777scapp777'
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -24,7 +24,7 @@ os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
 # Argument parsing
 parser = argparse.ArgumentParser(description="Flask upload server with cluster integration")
-parser.add_argument("--cluster-path", default=CLUSTER_PATH_INPUT, help="Destination path on the cluster for uploaded video")
+parser.add_argument("--cluster-path", default=CLUSTER_PATH, help="Destination path on the cluster for uploaded video")
 parser.add_argument("--url-name", default=URL_NAME, help="Name of your reserved zrok URL")
 args = parser.parse_args()
 
