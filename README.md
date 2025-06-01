@@ -101,7 +101,7 @@ SplatScan/
 2. In `Pipeline/local/splat_workspace/local_job.sh`, update:
 
 ```text
-USER_PATH  → your preferred save path
+USER_PATH  → your project save path
 ```
 
 3. Remove the `.gitkeep` files from:
