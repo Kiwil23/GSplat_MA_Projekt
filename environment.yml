@@ -1,4 +1,4 @@
-name: myenv
+name: splat_pipeline
 channels:
   - conda-forge
 dependencies:
