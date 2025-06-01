@@ -1,132 +1,95 @@
-# GSplat_MA_Projekt
+# GSplat MA Projekt
 
-1. Cluster Frontend :  
-   👉 [https://ood-1.ai.lrz.de/pun/sys/dashboard](https://ood-1.ai.lrz.de/pun/sys/dashboard)
+## Overview
+- **Cluster Frontend:** https://ood-1.ai.lrz.de/pun/sys/dashboard
 
-# 📦 GSplat MA Projekt – Setup Guide
+---
 
-## 🔧 Setup Instructions
+## Setup Guide
 
-### 📁 Clone the Repository
-
-```bash
+### 1. Clone Repository
 git clone https://github.com/Kiwil23/GSplat_MA_Projekt.git
 cd GSplat_MA_Projekt
-```
 
 ---
 
-### 🐍 Conda Environment Setup
-
-1. Create and activate the environment:
-
-```bash
+### 2. Conda Environment
+Create & activate environment:
 conda env create -f environment.yml
 conda activate splat_pipeline
-```
 
-2. Alternatively, install dependencies manually:
-
-```bash
+Alternatively, install manually:
 pip install flask paramiko
-```
 
 ---
 
-### 🌐 Zrok Setup
-
-1. Install zrok  
-   → https://docs.zrok.io/docs/guides/install/
-
-2. Create a zrok account:
-
-```bash
+### 3. Zrok Setup
+- Install: https://docs.zrok.io/docs/guides/install/
+- Create account & invite:
 zrok invite
-```
 
-3. Enable your zrok account:
-
-```bash
+- Enable account:
 zrok enable <your_token>
-```
 
-4. Reserve a custom subdomain:
-
-```bash
+- Reserve custom subdomain:
 zrok reserve public localhost:8080 --unique-name <your_subdomain_name>
-```
 
-5. You can release a reservation with:
-
-```bash
+- Release reservation:
 zrok release <your_subdomain_name>
-```
 
 ---
 
-### 🖥️ LRZ AI Systems Cluster Setup
+### 4. LRZ AI Systems Cluster Setup
 
-1. In `Pipeline/cluster/splat_workspace/gpu_job.sbatch`, update:
+- Edit Pipeline/cluster/splat_workspace/gpu_job.sbatch, update:
+  USER_PATH → your cluster home directory
 
-```text
-USER_PATH  → your cluster home directory
-```
+- Copy folder to cluster home directory:
+  Pipeline/cluster/splat_workspace
 
-2. Copy the folder `Pipeline/cluster/splat_workspace` to your cluster home directory.
+- Remove .gitkeep files from:
+  input_data/
+  result_data/
 
-3. Remove the `.gitkeep` files from:
-
-```
-input_data/
-result_data/
-```
-
-connect with Cluster, start an interactive session and get create a enroot container
-
-ssh login.ai.lrz.de -l your username
+- Connect to cluster, start interactive session, create enroot container:
+ssh login.ai.lrz.de -l <your_username>
 cd splat_workspace
 salloc -p lrz-hgx-h100-94x4 --gres=gpu:1
 srun enroot import docker://kiwil23/splat_tools_slim
 exit
 
-rename the new kiwil23+splat_tools_slim.sqsh in kiwil23_splat_tools_slim.sqsh
-
-
----
-
-### 📱 Android App Setup
-
-1. Enable USB Debugging on your phone and connect it to your computer.
-
-2. Install Android Studio and open the folder:
-
-```
-SplatScan/
-```
-
-3. Run the app on your device.
+- Rename container file:
+kiwil23+splat_tools_slim.sqsh → kiwil23_splat_tools_slim.sqsh
 
 ---
 
-### 🖥️ For a Local Setup with Docker (for NVIDIA GPU only)
+### 5. Android App Setup
 
-1. Make sure Docker is installed and your system has a CUDA-compatible NVIDIA GPU.
-2. get the kiwil23/splat_tools_slim docker image with docker pull kiwil23/splat_tools_slim:latest or build from source (GSplat_MA_Projekt/Docker_Splat_Tools)
-
-3. In `Pipeline/local/splat_workspace/local_job.sh`, update:
-
-```text
-USER_PATH  → your project save path
-```
-
-3. Remove the `.gitkeep` files from:
-
-```
-input_data/
-result_data/
-```
+- Enable USB debugging on your phone and connect it.
+- Open Android Studio and load the folder:
+  SplatScan/
+- Run the app on your device.
 
 ---
+
+### 6. Local Setup with Docker (NVIDIA GPU only)
+
+- Ensure Docker and CUDA-compatible NVIDIA GPU installed.
+- Pull or build Docker image:
+docker pull kiwil23/splat_tools_slim:latest
+or build from GSplat_MA_Projekt/Docker_Splat_Tools
+
+- Edit Pipeline/local/splat_workspace/local_job.sh, update:
+  USER_PATH → your project save path
+
+- Remove .gitkeep files from:
+  input_data/
+  result_data/
+
+---
+
+Happy coding! 🚀
+
 
 
 
