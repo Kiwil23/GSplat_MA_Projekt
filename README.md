@@ -145,9 +145,47 @@ result_data/
 
 ---
 
+## 📱 App Usage
+
+1. **Start the API**  
+   - For cluster use:  
+     ```bash
+     python Pipeline/cluster/API/Cluster_API.py --url-name <Your_Zrok_Subdomain_Name>
+     ```
+   - For local use:  
+     ```bash
+     python Pipeline/local/API/Local_API.py --url-name <Your_Zrok_Subdomain_Name>
+     ```
+
+2. **Launch the SplatScan App**  
+   - Tap `SET URL` and enter your Zrok subdomain name.
+
+3. **Capture Video**  
+   - Tap `Start Recording` to record your object.  
+   - Try to capture as many angles as possible and ensure good lighting and focus.
+
+4. **Set Training Parameters**  
+   Tap `SET PARAMETERS` to define training options (default: `100,100,100,10000`):
+
+   | Option                        | Description                                                    |
+   |-------------------------------|----------------------------------------------------------------|
+   | `--pre_filter_img="30"`       | Keep top 30% sharpest images (plus 5% extra automatic filtering) |
+   | `--post_filter_img="60"`      | Keep top 60% after RAFT filtering                             |
+   | `--train_img_percentage="90"` | Use 90% of the remaining images for training                  |
+   | `--train_iters=XXXX`          | Number of training iterations                                 |
+
+5. **Upload and Wait**  
+   - Tap `UPLOAD VIDEO` and wait for training to finish.  
+   - The result `.ply` file will be available in:  
+     ```
+     /API/downloads
+     ```
+
+
+
 ## ▶️ Manual Pipeline Usage
 
-In `gpu_job.sbatch` or ,`local_job.sh` set the desired `--pipeline_type`:
+In `gpu_job.sbatch` or ,`local_job.sh` set the desired `--pipeline_type` and settings:
 
 ### 🎥 For MP4 videos in /input_data:
 
