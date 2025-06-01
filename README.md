@@ -9,10 +9,10 @@
 
 ### 📁 Clone the Repository
 
-bash
+```bash
 git clone https://github.com/Kiwil23/GSplat_MA_Projekt.git
 cd GSplat_MA_Projekt
-
+```
 
 ---
 
@@ -20,16 +20,16 @@ cd GSplat_MA_Projekt
 
 1. Create and activate the environment:
 
-bash
+```bash
 conda env create -f environment.yml
 conda activate splat_pipeline
-
+```
 
 2. Alternatively, install dependencies manually:
 
-bash
+```bash
 pip install flask paramiko
-
+```
 
 ---
 
@@ -40,56 +40,58 @@ pip install flask paramiko
 
 2. Create a zrok account:
 
-bash
+```bash
 zrok invite
-
+```
 
 3. Enable your zrok account:
 
-bash
+```bash
 zrok enable <your_token>
-
+```
 
 4. Reserve a custom subdomain:
 
-bash
+```bash
 zrok reserve public localhost:8080 --unique-name <your_subdomain_name>
-
+```
 
 5. You can release a reservation with:
 
-bash
+```bash
 zrok release <your_subdomain_name>
-
+```
 
 ---
 
 ### 🖥️ LRZ AI Systems Cluster Setup
 
-1. In Pipeline/cluster/splat_workspace/gpu_job.sbatch, update:
+1. In `Pipeline/cluster/splat_workspace/gpu_job.sbatch`, update:
 
-text
+```
 USER_PATH  → your cluster home directory
+```
 
+2. Copy the folder `Pipeline/cluster/splat_workspace` to your cluster home directory.
 
-2. Copy the folder Pipeline/cluster/splat_workspace to your cluster home directory.
+3. Remove the `.gitkeep` files from:
 
-3. Remove the .gitkeep files from:
-
+```
 input_data/
 result_data/
+```
 
+Connect with cluster, start an interactive session and create an enroot container:
 
-connect with Cluster, start an interactive session and get create a enroot container
-
-ssh login.ai.lrz.de -l your username
+```bash
+ssh login.ai.lrz.de -l your_username
 cd splat_workspace
 salloc -p lrz-hgx-h100-94x4 --gres=gpu:1
 srun enroot import docker://kiwil23/splat_tools_slim
 exit
+```
 
-rename the new kiwil23+splat_tools_slim.sqsh in kiwil23_splat_tools_slim.sqsh
-
+Rename the new `kiwil23+splat_tools_slim.sqsh` to `kiwil23_splat_tools_slim.sqsh`
 
 ---
 
@@ -99,31 +101,41 @@ rename the new kiwil23+splat_tools_slim.sqsh in kiwil23_splat_tools_slim.sqsh
 
 2. Install Android Studio and open the folder:
 
+```
 SplatScan/
-
+```
 
 3. Run the app on your device.
 
 ---
 
-### 🖥️ For a Local Setup with Docker (for NVIDIA GPU only)
+### 🖥️ For a Local Setup with Docker (NVIDIA GPU only)
 
 1. Make sure Docker is installed and your system has a CUDA-compatible NVIDIA GPU.
-2. get the kiwil23/splat_tools_slim docker image with docker pull kiwil23/splat_tools_slim:latest or build from source (GSplat_MA_Projekt/Docker_Splat_Tools)
 
-3. In Pipeline/local/splat_workspace/local_job.sh, update:
+2. Get the docker image with:
 
-text
+```bash
+docker pull kiwil23/splat_tools_slim:latest
+```
+
+or build from source (located in `GSplat_MA_Projekt/Docker_Splat_Tools`)
+
+3. In `Pipeline/local/splat_workspace/local_job.sh`, update:
+
+```
 USER_PATH  → your project save path
+```
 
+4. Remove the `.gitkeep` files from:
 
-3. Remove the .gitkeep files from:
-
+```
 input_data/
 result_data/
-
+```
 
 ---
+
 
 
 
