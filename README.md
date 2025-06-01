@@ -1,102 +1,230 @@
-# GSplat_MA_Projekt
+# GSplat Master's Project – Setup Guide
 
-## Pipeline auf dem Cluster ausführen
+## 🚀 Cluster Frontend
 
-### 📦 Enroot-Container klonen
-
-1. Frontend öffnen:  
-   👉 [https://ood-1.ai.lrz.de/pun/sys/dashboard](https://ood-1.ai.lrz.de/pun/sys/dashboard)
-
-2. Einen Ordner `Containers` im `/home`-Verzeichnis anlegen.
-
-3. Mit SSH verbinden:
-   ```bash
-   ssh login.ai.lrz.de -l xxyyyzz
-   cd Containers
-   ```
-
-4. Interaktive Session starten:
-   ```bash
-   salloc -p lrz-hgx-h100-94x4 --gres=gpu:1
-   ```
-
-5. Prüfen, ob H100 GPU zugewiesen ist:
-   ```bash
-   srun nvidia-smi
-   ```
-
-6. Docker-Image mit Enroot importieren (**nur auf Compute-Knoten**):
-   ```bash
-   srun enroot import docker://kiwil23/splat_tools_slim
-   ```
-
-7. Session mit `exit` beenden.
-
-8. Datei umbenennen:
-   ```bash
-   Von kiwil23+splat_tools_slim.sqsh in kiwil23_splat_tools_slim.sqsh
-   ```
+Access the LRZ Cluster Dashboard:
+👉 [https://ood-1.ai.lrz.de/pun/sys/dashboard](https://ood-1.ai.lrz.de/pun/sys/dashboard)
 
 ---
 
-### 🧱 Pipeline-Umgebung vorbereiten
+## 📦 Project Setup Instructions
 
-**Verzeichnisstruktur erstellen:**
+### 📁 Clone Repository
 
+```bash
+git clone https://github.com/Kiwil23/GSplat_MA_Projekt.git
+cd GSplat_MA_Projekt
 ```
-Jobs/
-├── gpu_job.sbatch
-
-Containers/
-├── input_data/
-├── result_data/
-└── scripts/
-```
-
-- In `Containers/scripts/` (Cluster) alle Dateien aus (Repo) `pipeline_assets/main_pipeline/scripts` kopieren  
-- `gpu_job.sbatch` in `Jobs/` speichern und darin die Pfade entsprechend auf die `Containers/`-Struktur anpassen
 
 ---
 
-### ▶️ Pipeline ausführen
+### 🐍 Conda Environment
 
-In `gpu_job.sbatch` können folgende Argumente gesetzt werden:
+Create and activate the environment:
 
-#### Für .mp4 in `input_data/`:
+```bash
+conda env create -f environment.yml
+conda activate splat_pipeline
+```
 
-| Argument                    | Beschreibung                                                  |
-|----------------------------|---------------------------------------------------------------|
-| `--pipeline_type="mp4_to_images"`            | extrahiert Einzelframes                                       |
-| `--pipeline_type="mp4_to_colmap"`            | gibt COLMAP-Ergebnisse zurück                                |
-| `--pipeline_type="mp4_to_transforms"`        | COLMAP → für Splatfacto vorbereitet                          |
-| `--pipeline_type="mp4_to_splat"`             | (Default) vollständige Pipeline inkl. .ply für Training                |
+Or install manually:
 
-#### Für Einzelbilder in `input_data/`:
+```bash
+pip install flask paramiko
+```
 
-| Argument                    | Beschreibung                                                  |
-|----------------------------|---------------------------------------------------------------|
-| `--pipeline_type="images_to_colmap"`         | gibt COLMAP-Ergebnisse zurück                                |
-| `--pipeline_type="images_to_transforms"`     | COLMAP → für Splatfacto vorbereitet                          |
-| `--pipeline_type="images_to_splat"`          | vollständige Pipeline inkl. .ply für Training                |
+---
 
-#### Für vorhandene COLMAP-Daten in ` input_data` :
+### 🌐 Zrok Setup
 
-Ordnerstruktur:
+1. [Install zrok](https://docs.zrok.io/docs/guides/install/)
+2. Create an account:
+
+```bash
+zrok invite
+```
+
+3. Enable your account:
+
+```bash
+zrok enable <your_token>
+```
+
+4. Reserve a subdomain:
+
+```bash
+zrok reserve public localhost:8080 --unique-name <your_subdomain_name>
+```
+
+5. You can release a reservation:
+
+```bash
+zrok release <your_subdomain_name>
+```
+
+---
+
+### 🖥️ LRZ AI Cluster Setup
+
+1. Edit the file:
+   `Pipeline/cluster/splat_workspace/gpu_job.sbatch`
+   Update:
+
+```bash
+USER_PATH  → your cluster home directory
+```
+
+2. Copy `Pipeline/cluster/splat_workspace` to your cluster home directory.
+3. Remove `.gitkeep` files from:
+
+```
+input_data/
+result_data/
+```
+
+4. Connect and create enroot container:
+
+```bash
+ssh login.ai.lrz.de -l your_username
+cd splat_workspace
+salloc -p lrz-hgx-h100-94x4 --gres=gpu:1
+srun enroot import docker://kiwil23/splat_tools_slim
+exit
+```
+
+5. Rename the image:
+
+```bash
+mv kiwil23+splat_tools_slim.sqsh kiwil23_splat_tools_slim.sqsh
+```
+
+---
+
+### 📱 Android App Setup
+
+1. Enable USB Debugging on your device.
+2. Install Android Studio and open:
+
+```
+SplatScan/
+```
+
+3. Run the app on your device.
+
+---
+
+### 🖥️ Local Docker Setup (NVIDIA GPU only)
+
+1. Install Docker and [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
+2. Pull the Docker image:
+
+```bash
+docker pull kiwil23/splat_tools_slim:latest
+```
+
+Or build from source:
+
+```bash
+GSplat_MA_Projekt/Docker_Splat_Tools
+```
+
+3. Edit:
+   `Pipeline/local/splat_workspace/local_job.sh`
+   Update:
+
+```bash
+USER_PATH  → your project save path
+```
+
+4. Remove `.gitkeep` files from:
+
+```
+input_data/
+result_data/
+```
+
+---
+
+## 📱 App Usage
+
+1. **Start the API**  
+   - For cluster use:  
+     ```bash
+     python Pipeline/cluster/API/Cluster_API.py --url-name <Your_Zrok_Subdomain_Name>
+     ```
+   - For local use:  
+     ```bash
+     python Pipeline/local/API/Local_API.py --url-name <Your_Zrok_Subdomain_Name>
+     ```
+
+2. **Launch the SplatScan App**  
+   - Tap `SET URL` and enter your Zrok subdomain name.
+
+3. **Capture Video**  
+   - Tap `Start Recording` to record your object.  
+   - Try to capture as many angles as possible and ensure good lighting and focus.
+
+4. **Set Training Parameters**  
+   Tap `SET PARAMETERS` to define training options (default: `100,100,100,10000`):
+
+   | Option                        | Description                                                    |
+   |-------------------------------|----------------------------------------------------------------|
+   | `--pre_filter_img="30"`       | Keep top 30% sharpest images (plus 5% extra automatic filtering) |
+   | `--post_filter_img="60"`      | Keep top 60% after RAFT filtering                             |
+   | `--train_img_percentage="90"` | Use 90% of the remaining images for training                  |
+   | `--train_iters=XXXX`          | Number of training iterations                                 |
+
+5. **Upload and Wait**  
+   - Tap `UPLOAD VIDEO` and wait for training to finish.  
+   - The result `.ply` file will be available in:  
+     ```
+     /API/downloads
+     ```
+
+
+
+## ▶️ Manual Pipeline Usage
+
+In `gpu_job.sbatch` or ,`local_job.sh` set the desired `--pipeline_type` and settings:
+
+### 🎥 For MP4 videos in /input_data:
+
+| Argument                              | Result                              |
+| ------------------------------------- | ---------------------------------------- |
+| `--pipeline_type="mp4_to_images"`     | Extracted frames                           |
+| `--pipeline_type="mp4_to_colmap"`     | COLMAP data                              |
+| `--pipeline_type="mp4_to_transforms"` | Prepared train data for Splatfacto                   |
+| `--pipeline_type="mp4_to_splat"`      | (Default) Full pipeline with .ply output |
+
+### 🖼️ For individual Images in /input_data:
+
+| Argument                                 | Result                    |
+| ---------------------------------------- | ------------------------------ |
+| `--pipeline_type="images_to_colmap"`     | COLMAP data                      |
+| `--pipeline_type="images_to_transforms"` | Prepared train data for Splatfacto         |
+| `--pipeline_type="images_to_splat"`      | Full pipeline with .ply output |
+
+### 🗃️ From COLMAP Data in /input_data:
+
+**Required Structure:**
+
 ```
 input_data/
 ├── images/
 ├── sparse/
+|   └── 0,1,2...
 └── database.db
 ```
 
-| Argument                    | Beschreibung                                                  |
-|----------------------------|---------------------------------------------------------------|
-| `--pipeline_type="colmap_to_transforms"`     | für Splatfacto vorbereiten                                   |
-| `--pipeline_type="colmap_to_splat"`          | vollständige Pipeline inkl. .ply für Training                |
+| Argument                                 | Description                    |
+| ---------------------------------------- | ------------------------------ |
+| `--pipeline_type="colmap_to_transforms"` | Prepared train data for Splatfacto         |
+| `--pipeline_type="colmap_to_splat"`      | Full pipeline with .ply output |
 
-#### Für vorbereitete COLMAP-Daten für Splatfacto ` input_data` :
+### 🗂️ From Preprocessed COLMAP Data:
 
-Ordnerstruktur:
+**Required Structure:**
+
 ```
 input_data/
 ├── colmap/
@@ -110,102 +238,39 @@ input_data/
 └── transforms.json
 ```
 
-| Argument                    | Beschreibung                                                  |
-|----------------------------|---------------------------------------------------------------|
-| `--pipeline_type="transforms_to_splat"`      | vollständige Pipeline inkl. .ply für Training                |
+| Argument                                | Result                    |
+| --------------------------------------- | ------------------------------ |
+| `--pipeline_type="transforms_to_splat"` | Full pipeline with .ply output |
 
-#### Zusätzliche Filterung:
+### 🧹 Optional Image Filtering:
 
-| Option             | Wirkung                                                                   |
-|--------------------|---------------------------------------------------------------------------|
-| `--pre_filter_img`  |Filterung vor raft_extractor Bilderauswahl z.B. --pre_filter_img="30" Behalte 30% der schärften Bilder (zusätzlich feste 5 % extra Filterung von unbrauchbaren Bildern  |
-| `--post_filter_img` |Filterung nach raft_extractor Bilderauswahl z.B. --pre_filter_img="60" Behalte 60% der schärften Bilder  |
-|`--train_img_percentage`|Vie viele Bilder für das Splat Training genutzt werden z.B. --train_img_percentage="90" Trainiere den Splat mit 90% der verbleibenden Bilder |
-#### Pipeline starten:
+| Option                        | Description                                            |
+| ----------------------------- | ------------------------------------------------------ |
+| `--pre_filter_img="30"`       | e.g. Keep top 30% sharpest images (plus 5% extra filtering) |
+| `--post_filter_img="60"`      | e.g. Keep top 60% after RAFT filtering                      |
+| `--train_img_percentage="90"` | e.g. Use 90% of remaining images for training               |
+| `--train_iters=XXXX`          | e.g. Number of training iterations                          |
+
+### 🔁 Start Pipeline:
 
 ```bash
-sbatch gpu_job.sbatch
+sbatch gpu_job.sbatch or ./local_job.sh
 ```
 
 ---
 
-### 🛠️ Fehlerbehebung
+## ⚠️ Troubleshooting
 
-Fehlermeldung:
-```
+**Issue:**
+
+```bash
 sbatch: error: Batch script contains DOS line breaks (\r\n)
 sbatch: error: instead of expected UNIX line breaks (\n).
 ```
 
-Beheben mit:
+**Fix:**
+
 ```bash
 sed -i 's/\r$//' gpu_job.sbatch
 sbatch gpu_job.sbatch
 ```
-```
-Sicherstellen das die Pointcloud in sparse/0 liegt
-Sollte Sie z.B. in sparse/1 liegen, alle anderen Pointcloud Ordner löschen
-und in Pipeline.py für den gewünschten Schritt bei prepare_colmap_data_for_splatfacto()
-os.path.join(input_data_dir, "sparse/0")) ---> os.path.join(input_data_dir, "sparse/1"))
-Auch bei prepare_colmap_data_for_splatfacto() sicherstellen das die richtigen colmap images verwendet werden, der von prepare_colmap_data_for_splatfacto()
-generierte Ordner "images" entspricht nicht den colmap images. Die von colmap verwendeten Bilder sind in extracted_images sofern nicht ohnehin noch in inputdata.
-```
----
-
-### 🧩 scripts-Verzeichnis
-
-- Enthält `pipeline.py` → steuert den Ablauf im Container  
-- Kann modifiziert werden, um die Pipeline anzupassen  
-- Output liegt in `result_data/` als `splat.ply`, Trainingsdaten, und Rohdaten von Splatfacto
-
----
-
-## 💻 Lokale Ausführung
-
-### Vorbereitung:
-
-1. **Windows:** Docker Desktop installieren  
-   👉 [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)  
-   - WSL2 aktivieren  
-   - ggf. `.wslconfig` anpassen
-
-2. **Linux:**  
-   👉 [https://docs.docker.com/engine/install/ubuntu/](https://docs.docker.com/engine/install/ubuntu/)
-
-3. **NVIDIA Container Toolkit installieren:**  
-   👉 [https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
-
-4. **Verzeichnisstruktur anlegen:**
-```
-MeinVerzeichnis/
-├── input_data/
-├── result_data/
-└── scripts/
-```
-
-5. Docker-Image bauen:
-```bash
-cd <FULL_PATH_TO>/Docker
-docker build -t <IMAGE_NAME> .
-```
-
-6. Container starten:
-```bash
-docker run -it --gpus all \
-  -v <FULL_PATH_TO>/input_data:/mnt/input_data \
-  -v <FULL_PATH_TO>/result_data:/mnt/result_data \
-  -v <FULL_PATH_TO>/scripts:/mnt/pipeline_scripts \
-  -p 7007:7007 <IMAGE_NAME> \
-  python3 /mnt/pipeline_scripts/pipeline.py \
-  --pipeline_type="mp4_to_splat" \
-  --is_big_dataset="False" && echo "pipeline.py done"
-```
-oder mit Mockup.sh unter `pipeline_assets/jobscripts/Mockup.sh` 
-
-7. Output liegt in `result_data/`
-
----
-
-## 📦 DockerHub Image
-
-🔗 [https://hub.docker.com/repository/docker/kiwil23/splat_tools_slim/general](https://hub.docker.com/repository/docker/kiwil23/splat_tools_slim/general)
