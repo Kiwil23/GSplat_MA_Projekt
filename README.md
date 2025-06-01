@@ -97,8 +97,9 @@ SplatScan/
 ### 🖥️ For a Local Setup with Docker (for NVIDIA GPU only)
 
 1. Make sure Docker is installed and your system has a CUDA-compatible NVIDIA GPU.
+2. get the kiwil23/splat_tools_slim docker image with docker pull kiwil23/splat_tools_slim:latest or build from source (GSplat_MA_Projekt/Docker_Splat_Tools)
 
-2. In `Pipeline/local/splat_workspace/local_job.sh`, update:
+3. In `Pipeline/local/splat_workspace/local_job.sh`, update:
 
 ```text
 USER_PATH  → your project save path
