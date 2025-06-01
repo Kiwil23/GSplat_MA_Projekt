@@ -1,9 +1,13 @@
 # GSplat Master's Project – Setup Guide
 
-## 🚀 Cluster Frontend
+## 🚀 Description
 
 Access the LRZ Cluster Dashboard:
 👉 [https://ood-1.ai.lrz.de/pun/sys/dashboard](https://ood-1.ai.lrz.de/pun/sys/dashboard)
+
+This Reository contains a Gaussian Splatting-based 3D reconstruction pipeline designed for efficient and high-quality 3D scene modeling from video or images. The project includes a complete processing pipeline that runs on the LRZ AI cluster or locally with NVIDIA GPUs, and features an Android app (SplatScan) to capture videos, set parameters, and upload data seamlessly for 3D reconstruction.
+
+The pipeline supports multiple input types (video, images, COLMAP data) and outputs high-fidelity 3D models (.ply files) using a modular, configurable workflow optimized for GPU acceleration.
 
 ---
 
@@ -56,7 +60,7 @@ zrok enable <your_token>
 zrok reserve public localhost:8080 --unique-name <your_subdomain_name>
 ```
 
-5. You can release a reservation:
+5. You can release a reservation with:
 
 ```bash
 zrok release <your_subdomain_name>
@@ -150,7 +154,7 @@ result_data/
 1. **Start the API**  
    - For cluster use:  
      ```bash
-     python Pipeline/cluster/API/Cluster_API.py --url-name <Your_Zrok_Subdomain_Name>
+     python Pipeline/cluster/API/Cluster_API.py --url-name <Your_Zrok_Subdomain_Name> --cluster-path <Cluster_Home_Path>
      ```
    - For local use:  
      ```bash
