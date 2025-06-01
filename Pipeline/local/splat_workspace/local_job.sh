@@ -6,7 +6,7 @@ TRAIN_IMG_PERCENTAGE=${3:-100}
 TRAIN_ITERS=${4:-10000}
 
 #------------CHANE TO YOUR PATH---------------
-USER_PATH="Path_To_Your/GSplat_MA_Projekt"
+USER_PATH= Path to your project save path
 #------------CHANE TO YOUR PATH---------------
 
 docker run --rm -it --gpus all \

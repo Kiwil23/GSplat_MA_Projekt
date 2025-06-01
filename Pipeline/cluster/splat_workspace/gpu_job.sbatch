@@ -12,7 +12,7 @@ TRAIN_IMG_PERCENTAGE=${3:-100}
 TRAIN_ITERS=${4:-10000}
 
 #------------CHANE TO YOUR PATH---------------
-USER_PATH=/dss/dsshome1/09/di97yuz
+USER_PATH= Path to your cluster home directory
 #------------CHANE TO YOUR PATH---------------
 
 # Instanzname
