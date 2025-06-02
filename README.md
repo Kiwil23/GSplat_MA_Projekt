@@ -159,7 +159,7 @@ result_data/
      ```
 
 2. **Launch the SplatScan App**  
-   - Tap `SET URL` and enter your Zrok subdomain name.
+   - Tap `SET URL` and enter your zrok subdomain name.
 
 3. **Capture Video**  
    - Tap `Start Recording` to record your object.  
