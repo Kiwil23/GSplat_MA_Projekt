@@ -74,7 +74,7 @@ zrok release <your_subdomain_name>
 USER_PATH  → your cluster home directory
 ```
 
-2. Copy `Pipeline/cluster/splat_workspace` to your cluster home directory.
+2. Copy `Pipeline/cluster/splat_workspace` to your cluster home directory. You may need to run ```sed -i 's/\r$//' gpu_job.sbatch ```
 3. Remove `.gitkeep` files from:
 
 ```
