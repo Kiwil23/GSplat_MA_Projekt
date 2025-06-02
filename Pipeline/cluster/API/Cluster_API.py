@@ -145,6 +145,15 @@ def safe_int(value, default):
     except ValueError:
         return default
 
+@app.route('/status', methods=['GET'])
+def job_status():
+    """Returns whether a job is currently running."""
+    with job_lock:
+        if job_running:
+            return {"status": "running"}, 200
+        else:
+            return {"status": "idle"}, 200
+
 @app.route('/upload', methods=['POST'])
 def upload_video():
     """Upload endpoint: accepts a video and starts a cluster job if idle."""

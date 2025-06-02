@@ -23,6 +23,17 @@ import java.util.*
 import android.app.AlertDialog
 import android.widget.EditText
 import android.graphics.Color
+import java.util.concurrent.TimeUnit
+
+import android.view.View
+import android.widget.ProgressBar
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
+import okio.BufferedSink
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,6 +47,8 @@ class MainActivity : AppCompatActivity() {
     private var videoUploadParams: Map<String, String>? = null
     private var urlPart = "splatscan777scapp777" // Default zrok URL part
     private var isUploading: Boolean = false // Upload status tracker
+
+    private lateinit var uploadProgressBar: ProgressBar
 
     // Runtime permission request launcher
     private val requestPermissionLauncher = registerForActivityResult(
@@ -90,6 +103,7 @@ class MainActivity : AppCompatActivity() {
 
         startRecordingButton = findViewById(R.id.startRecordingButton)
         uploadButton = findViewById(R.id.uploadButton)
+        uploadProgressBar = findViewById(R.id.uploadProgressBar)
         val setUrlButton = findViewById<Button>(R.id.setUrlButton)
         val parameterButton = findViewById<Button>(R.id.parameterButton)
 
@@ -123,9 +137,7 @@ class MainActivity : AppCompatActivity() {
             if (isUploading) {
                 Toast.makeText(this, "Another video is being uploaded. Please wait...", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Upload started...", Toast.LENGTH_SHORT).show()
-                isUploading = true
-                uploadVideo()
+                checkServerStatusAndUpload()
             }
         }
 
@@ -179,17 +191,39 @@ class MainActivity : AppCompatActivity() {
 
     // Upload video file to server via HTTP POST
     private fun uploadVideo() {
+        uploadProgressBar.progress = 0
+        uploadProgressBar.visibility = View.VISIBLE
+
         Thread {
             try {
+                val videoRequestBody = object : RequestBody() {
+                    override fun contentType() = "video/mp4".toMediaTypeOrNull()
+
+                    override fun contentLength(): Long = videoFile!!.length()
+
+                    override fun writeTo(sink: BufferedSink) {
+                        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                        val input = videoFile!!.inputStream()
+                        var uploaded: Long = 0
+                        input.use {
+                            var read: Int
+                            while (input.read(buffer).also { read = it } != -1) {
+                                sink.write(buffer, 0, read)
+                                uploaded += read
+
+                                val progress = (100 * uploaded / contentLength()).toInt()
+                                runOnUiThread {
+                                    uploadProgressBar.progress = progress
+                                }
+                            }
+                        }
+                    }
+                }
+
                 val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
+                builder.addFormDataPart("video", videoFile!!.name, videoRequestBody)
 
-                builder.addFormDataPart(
-                    "video",
-                    videoFile!!.name,
-                    videoFile!!.asRequestBody("video/mp4".toMediaTypeOrNull())
-                )
-
-                // Add parameters if available
+                // Parameter hinzufügen
                 videoUploadParams?.forEach { (key, value) ->
                     builder.addFormDataPart(key, value)
                 }
@@ -202,29 +236,56 @@ class MainActivity : AppCompatActivity() {
                     .post(requestBody)
                     .build()
 
-                val client = OkHttpClient()
+                val client = OkHttpClient.Builder()
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(15, TimeUnit.MINUTES)
+                    .readTimeout(15, TimeUnit.MINUTES)
+                    .build()
+
                 val response = client.newCall(request).execute()
 
                 runOnUiThread {
+                    uploadProgressBar.visibility = View.GONE
                     isUploading = false
                     when (response.code) {
-                        200 -> {
-                            Toast.makeText(this, "Upload successful, job started", Toast.LENGTH_SHORT).show()
-                        }
-                        429 -> {
-                            Toast.makeText(this, "Another video is being processed. Please wait...", Toast.LENGTH_LONG).show()
-                        }
-                        else -> {
-                            Toast.makeText(this, "Upload failed: Error code ${response.code}", Toast.LENGTH_SHORT).show()
-                        }
+                        200 -> Toast.makeText(this, "Upload successful, job started!", Toast.LENGTH_SHORT).show()
+                        429 -> Toast.makeText(this, "Another video is being processed please wait", Toast.LENGTH_LONG).show()
+                        else -> Toast.makeText(this, "Upload failed: ${response.code}", Toast.LENGTH_SHORT).show()
                     }
                 }
-
-            } catch (e: IOException) {
+            } catch (e: Exception) {
                 e.printStackTrace()
                 runOnUiThread {
                     isUploading = false
-                    Toast.makeText(this, "Error uploading: ${e.message}", Toast.LENGTH_LONG).show()
+                    uploadProgressBar.visibility = View.GONE
+                    Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+        }.start()
+    }
+
+    private fun checkServerStatusAndUpload() {
+        val fullStatusUrl = "https://$urlPart.share.zrok.io/status"
+
+        Thread {
+            try {
+                val request = Request.Builder().url(fullStatusUrl).get().build()
+                val client = OkHttpClient()
+                val response = client.newCall(request).execute()
+                val responseBody = response.body?.string()
+
+                runOnUiThread {
+                    if (response.isSuccessful && responseBody?.contains("idle") == true) {
+                        Toast.makeText(this, "Upload started...", Toast.LENGTH_SHORT).show()
+                        isUploading = true
+                        uploadVideo()
+                    } else {
+                        Toast.makeText(this, "Another video is being processed please wait...", Toast.LENGTH_LONG).show()
+                    }
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    Toast.makeText(this, "Error while status check: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
         }.start()
