@@ -54,7 +54,7 @@ zrok enable <your_token>
 4. Reserve a subdomain:
 
 ```bash
-zrok reserve public localhost:8080 --unique-name <your_subdomain_name>
+zrok reserve public localhost:8080 --unique-name <"your_subdomain_name">
 ```
 
 5. You can release a reservation with:
@@ -69,13 +69,12 @@ zrok release <your_subdomain_name>
 
 1. Edit the file:
    `Pipeline/cluster/splat_workspace/gpu_job.sbatch`
-   Update:
 
 ```bash
 USER_PATH  → your cluster home directory
 ```
 
-2. Copy `Pipeline/cluster/splat_workspace` to your cluster home directory.
+2. Copy `Pipeline/cluster/splat_workspace` to your cluster home directory. You may need to run ```sed -i 's/\r$//' gpu_job.sbatch ```
 3. Remove `.gitkeep` files from:
 
 ```
@@ -131,7 +130,6 @@ GSplat_MA_Projekt/Docker_Splat_Tools
 
 3. Edit:
    `Pipeline/local/splat_workspace/local_job.sh`
-   Update:
 
 ```bash
 USER_PATH  → your project save path
@@ -148,7 +146,7 @@ result_data/
 
 ## 📱 App Usage
 
-1. **Start the API**  
+1. **In your Conda Env Start the API**  
    - For cluster use:  
      ```bash
      cd Pipeline/cluster/API
@@ -161,7 +159,7 @@ result_data/
      ```
 
 2. **Launch the SplatScan App**  
-   - Tap `SET URL` and enter your Zrok subdomain name.
+   - Tap `SET URL` and enter your zrok subdomain name.
 
 3. **Capture Video**  
    - Tap `Start Recording` to record your object.  
