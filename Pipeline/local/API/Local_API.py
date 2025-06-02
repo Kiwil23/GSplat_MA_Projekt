@@ -193,7 +193,7 @@ def start_zrok_tunnel():
     Starts a zrok tunnel subprocess for public access.
     Returns the subprocess handle to allow termination on exit.
     """
-    proc = subprocess.Popen(["zrok", "share", "reserved", args.url_name])
+    proc = subprocess.Popen(["zrok", "share", "reserved", "--headless", args.url_name])
     print(f"Zrok tunnel started. URL: https://{args.url_name}.share.zrok.io")
     return proc
 

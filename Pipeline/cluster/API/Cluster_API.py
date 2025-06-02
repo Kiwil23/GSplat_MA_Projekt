@@ -224,7 +224,7 @@ def download_ply(filename):
 
 def start_zrok_tunnel():
     """Start a zrok tunnel for public access."""
-    proc = subprocess.Popen(["zrok", "share", "reserved", args.url_name])
+    proc = subprocess.Popen(["zrok", "share", "reserved", "--headless", args.url_name])
     print(f"zrok tunnel started. URL: https://{args.url_name}.share.zrok.io")
     return proc
 
