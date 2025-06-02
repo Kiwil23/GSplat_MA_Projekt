@@ -5,6 +5,7 @@ import time
 from flask import Flask, request, send_file, abort
 from threading import Thread, Lock
 import argparse
+import CallViewerDummy
 
 app = Flask(__name__)
 
@@ -28,6 +29,8 @@ args = parser.parse_args()
 # Job control variables to prevent concurrent execution
 job_running = False
 job_lock = Lock()
+
+is_splat_gen = False
 
 
 def clear_directory(directory_path):
@@ -114,8 +117,16 @@ def upload_and_monitor_job_dummy(save_path, keep_pre, keep_post, keep_train_img,
 
     # Job finished, reset the job_running flag
     with job_lock:
-        job_running = False
-        shutil.copy2("../splat_workspace/result_data/splat.ply", DOWNLOAD_FOLDER)
+        global is_splat_gen
+        try: 
+            shutil.copy2("../splat_workspace/result_data/splat.ply", DOWNLOAD_FOLDER)
+            is_splat_gen = True
+            job_running = False
+        except:
+            is_splat_gen = False
+            job_running = False
+            
+        
     
 @app.route('/status', methods=['GET'])
 def job_status():
@@ -124,7 +135,11 @@ def job_status():
         if job_running:
             return {"status": "running"}, 200
         else:
-            return {"status": "idle"}, 200
+            if is_splat_gen:
+                CallViewerDummy.main()   # Hier das andere scrip 
+                return {"status": "idle_succes"}, 200
+            else:
+                return {"status": "idle_fail"}, 200
 
 @app.route('/upload', methods=['POST'])
 def upload_video():

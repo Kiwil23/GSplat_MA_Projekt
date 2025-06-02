@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         val input = EditText(this)
         input.hint = "e.g., my1custom1reserved1zrok1url"
         input.setTextColor(Color.WHITE)
+        input.setText(urlPart)
 
         val dialog = AlertDialog.Builder(this)
             .setTitle("Input URL")
@@ -204,10 +205,18 @@ class MainActivity : AppCompatActivity() {
                     val response = client.newCall(request).execute()
                     val body = response.body?.string() ?: ""
 
-                    if (response.isSuccessful && body.contains("idle")) {
+                    if (response.isSuccessful && body.contains("idle_succes")) {
                         runOnUiThread {
                             generatingLayout.visibility = View.GONE // Spinner ausblenden
-                            Toast.makeText(this, "Finished splat, hurray!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Splat generated, hurray!", Toast.LENGTH_SHORT).show()
+                        }
+                        break // Beende die Schleife, Job fertig
+                    }
+
+                    if (response.isSuccessful && body.contains("idle_fail")) {
+                        runOnUiThread {
+                            generatingLayout.visibility = View.GONE // Spinner ausblenden
+                            Toast.makeText(this, "Splat failed ...", Toast.LENGTH_SHORT).show()
                         }
                         break // Beende die Schleife, Job fertig
                     }
@@ -337,6 +346,14 @@ class MainActivity : AppCompatActivity() {
         val keepPreInput = dialogView.findViewById<EditText>(R.id.keepPreInput)
         val keepPostInput = dialogView.findViewById<EditText>(R.id.keepPostInput)
         val imagesInput = dialogView.findViewById<EditText>(R.id.imagesInput)
+
+        videoUploadParams?.let {
+            iterationsInput.setText(it["iterations"])
+            keepPreInput.setText(it["keep_pre"])
+            keepPostInput.setText(it["keep_post"])
+            imagesInput.setText(it["keep_train_images"])
+        }
+
 
         val dialog = AlertDialog.Builder(this)
             .setTitle("Training Parameters")

@@ -10,6 +10,7 @@ import argparse
 from threading import Thread, Lock
 import re
 import posixpath
+import CallViewerDummy
 
 app = Flask(__name__)
 
@@ -41,6 +42,8 @@ password = getpass.getpass("Enter your cluster password: ")
 # Job control variables
 job_running = False
 job_lock = Lock()
+
+is_splat_gen = False
 
 def clear_directory(directory_path):
     """Remove all files and folders from the given directory."""
@@ -127,10 +130,13 @@ def upload_and_monitor_job(save_path, keep_pre, keep_post, keep_train_img, itera
         local_ply_path = os.path.join(DOWNLOAD_FOLDER, "splat.ply")
 
         try:
+            global is_splat_gen
             download_file_from_cluster(ssh, remote_ply_path, local_ply_path)
             print(f"Downloaded output file to {local_ply_path}")
+            is_splat_gen = True
         except Exception as e:
             print(f"Failed to download output file: {e} searched remote in {remote_ply_path} {local_ply_path}")
+            is_splat_gen = False
 
     except Exception as e:
         print(f"Exception in upload_and_monitor_job: {e}")
@@ -159,7 +165,11 @@ def job_status():
         if job_running:
             return {"status": "running"}, 200
         else:
-            return {"status": "idle"}, 200
+            if is_splat_gen:
+                CallViewerDummy.main() # Hier das andere scrip
+                return {"status": "idle_succes"}, 200
+            else:
+                return {"status": "idle_fail"}, 200
 
 @app.route('/upload', methods=['POST'])
 def upload_video():
