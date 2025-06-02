@@ -67,6 +67,11 @@ def download_file_from_cluster(ssh, remote_path, local_path):
     sftp.get(remote_path, local_path)
     sftp.close()
 
+def print_progress(transferred, total):
+    percent = (transferred / total) * 100
+    print(f"Upload progress: {percent:.2f}% ({transferred}/{total} bytes)", end='\r')
+
+
 def upload_and_monitor_job(save_path, keep_pre, keep_post, keep_train_img, iterations):
     """Handles upload, job submission, monitoring, and downloading result file."""
 
@@ -80,7 +85,9 @@ def upload_and_monitor_job(save_path, keep_pre, keep_post, keep_train_img, itera
 
         # Upload video to cluster
         sftp = ssh.open_sftp()
-        sftp.put(save_path, vid_path)
+        print(f"Starting upload of {save_path} to {vid_path} ...")
+        sftp.put(save_path, vid_path, callback=print_progress)
+        print("\nUpload finished.")
         sftp.close()
         print(f"Uploaded video to cluster at {vid_path}")
 
