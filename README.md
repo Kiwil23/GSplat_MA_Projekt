@@ -146,7 +146,7 @@ result_data/
 
 ## 📱 App Usage
 
-1. **Start the API**  
+1. **In your Conda Env Start the API**  
    - For cluster use:  
      ```bash
      cd Pipeline/cluster/API
