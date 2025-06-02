@@ -54,7 +54,7 @@ zrok enable <your_token>
 4. Reserve a subdomain:
 
 ```bash
-zrok reserve public localhost:8080 --unique-name <your_subdomain_name>
+zrok reserve public localhost:8080 --unique-name <"your_subdomain_name">
 ```
 
 5. You can release a reservation with:
