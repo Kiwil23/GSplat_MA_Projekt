@@ -49,6 +49,8 @@ class MainActivity : AppCompatActivity() {
     private var isUploading: Boolean = false // Upload status tracker
 
     private lateinit var uploadProgressBar: ProgressBar
+    private lateinit var generatingLayout: View
+
 
     // Runtime permission request launcher
     private val requestPermissionLauncher = registerForActivityResult(
@@ -100,6 +102,9 @@ class MainActivity : AppCompatActivity() {
 
         // Clear old video files on app start
         clearAppInternalVideoStorage()
+
+        generatingLayout = findViewById(R.id.generatingLayout)
+
 
         startRecordingButton = findViewById(R.id.startRecordingButton)
         uploadButton = findViewById(R.id.uploadButton)
@@ -189,6 +194,34 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun startPollingJobStatus() {
+        Thread {
+            while (true) {
+                try {
+                    val statusUrl = "https://$urlPart.share.zrok.io/status"
+                    val request = Request.Builder().url(statusUrl).get().build()
+                    val client = OkHttpClient()
+                    val response = client.newCall(request).execute()
+                    val body = response.body?.string() ?: ""
+
+                    if (response.isSuccessful && body.contains("idle")) {
+                        runOnUiThread {
+                            generatingLayout.visibility = View.GONE // Spinner ausblenden
+                            Toast.makeText(this, "Finished splat, hurray!", Toast.LENGTH_SHORT).show()
+                        }
+                        break // Beende die Schleife, Job fertig
+                    }
+
+                    Thread.sleep(5000) // 5 Sekunden warten bis nächster Check
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    break
+                }
+            }
+        }.start()
+    }
+
+
     // Upload video file to server via HTTP POST
     private fun uploadVideo() {
         uploadProgressBar.progress = 0
@@ -248,7 +281,11 @@ class MainActivity : AppCompatActivity() {
                     uploadProgressBar.visibility = View.GONE
                     isUploading = false
                     when (response.code) {
-                        200 -> Toast.makeText(this, "Upload successful, job started!", Toast.LENGTH_SHORT).show()
+                        200 -> {
+                            generatingLayout.visibility = View.VISIBLE // Spinner zeigen
+                            Toast.makeText(this, "Upload successful, job started!", Toast.LENGTH_SHORT).show()
+                            startPollingJobStatus() // Polling starten, Jobstatus abfragen
+                        }
                         429 -> Toast.makeText(this, "Another video is being processed please wait", Toast.LENGTH_LONG).show()
                         else -> Toast.makeText(this, "Upload failed: ${response.code}", Toast.LENGTH_SHORT).show()
                     }
@@ -290,6 +327,7 @@ class MainActivity : AppCompatActivity() {
             }
         }.start()
     }
+
 
     // Show dialog for custom training parameters
     private fun showParameterDialog() {

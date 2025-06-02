@@ -26,7 +26,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="264dp"
         android:layout_marginEnd="10dp"
-        android:text="Start Recording"
+        android:text="Start Scanning"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/logoImage"
@@ -41,7 +41,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:enabled="false"
-        android:text="Upload Video"
+        android:text="Generate Splat"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -90,5 +90,36 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.943" />
 
+    <LinearLayout
+        android:id="@+id/generatingLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/uploadButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/setUrlButton"
+        app:layout_constraintVertical_chainStyle="spread">
 
+        <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="12dp"
+            android:indeterminate="true" />
+
+        <TextView
+            android:id="@+id/generatingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Generating splat..."
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
