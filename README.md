@@ -69,7 +69,6 @@ zrok release <your_subdomain_name>
 
 1. Edit the file:
    `Pipeline/cluster/splat_workspace/gpu_job.sbatch`
-   Update:
 
 ```bash
 USER_PATH  → your cluster home directory
@@ -131,7 +130,6 @@ GSplat_MA_Projekt/Docker_Splat_Tools
 
 3. Edit:
    `Pipeline/local/splat_workspace/local_job.sh`
-   Update:
 
 ```bash
 USER_PATH  → your project save path
