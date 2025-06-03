@@ -136,7 +136,8 @@ def job_status():
             return {"status": "running"}, 200
         else:
             if is_splat_gen:
-                CallViewerDummy.main()   # Hier das andere scrip 
+                thread = Thread(target=CallViewerDummy.main)  # Hier das andere scrip 
+                thread.start()
                 return {"status": "idle_succes"}, 200
             else:
                 return {"status": "idle_fail"}, 200
@@ -208,7 +209,7 @@ def start_zrok_tunnel():
     Starts a zrok tunnel subprocess for public access.
     Returns the subprocess handle to allow termination on exit.
     """
-    proc = subprocess.Popen(["zrok", "share", "reserved", "--headless", args.url_name])
+    proc = subprocess.Popen(["zrok", "share", "reserved", args.url_name])
     print(f"Zrok tunnel started. URL: https://{args.url_name}.share.zrok.io")
     return proc
 

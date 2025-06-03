@@ -166,7 +166,8 @@ def job_status():
             return {"status": "running"}, 200
         else:
             if is_splat_gen:
-                CallViewerDummy.main() # Hier das andere scrip
+                thread = Thread(target=CallViewerDummy.main)  # Hier das andere scrip 
+                thread.start()
                 return {"status": "idle_succes"}, 200
             else:
                 return {"status": "idle_fail"}, 200
