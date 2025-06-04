@@ -8,7 +8,7 @@ The pipeline supports multiple input types (video, images, COLMAP data) and outp
 ---
 
 ## 📦 Project Setup Instructions  
-To Work with LRZ AI Sytems you need to have cluster access. https://doku.lrz.de/3-access-and-getting-started-10746642.html 
+To Work with LRZ AI Sytems you need to have cluster access. https://doku.lrz.de/3-access-and-getting-started-10746642.html  
 You also need eduVPN and connect with "Münchner Wissenschaftsnetz LRZ-VPN".
 
 ### 📁 Clone Repository
