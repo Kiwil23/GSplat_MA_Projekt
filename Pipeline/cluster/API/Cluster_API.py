@@ -10,7 +10,8 @@ import argparse
 from threading import Thread, Lock
 import re
 import posixpath
-import CallViewerDummy
+import CallViewer
+import time
 
 app = Flask(__name__)
 
@@ -44,6 +45,7 @@ job_running = False
 job_lock = Lock()
 
 is_splat_gen = False
+viewer_process = None
 
 def clear_directory(directory_path):
     """Remove all files and folders from the given directory."""
@@ -57,6 +59,26 @@ def clear_directory(directory_path):
                     os.remove(file_path)
             except Exception as e:
                 print(f"Error deleting {file_path}: {e}")
+
+def start_viewer():
+    global viewer_process
+
+    # Vorherigen Prozess beenden, falls er noch läuft
+    if viewer_process and viewer_process.poll() is None:
+        viewer_process.terminate()
+        viewer_process.wait()
+        print("Killed old viewer process.")
+
+    # Prüfen ob es etwas zum Anzeigen gibt
+    if os.listdir(DOWNLOAD_FOLDER):
+        viewer_process = subprocess.Popen(
+            [sys.executable, "CallViewer.py"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+        print("Started viewer process.")
+    else:
+        print("No Splat.ply in downloads.")
 
 def is_job_running(ssh, job_id):
     """Check if a SLURM job with job_id is still running."""
@@ -166,8 +188,7 @@ def job_status():
             return {"status": "running"}, 200
         else:
             if is_splat_gen:
-                thread = Thread(target=CallViewerDummy.main)  # Hier das andere scrip 
-                thread.start()
+                start_viewer()
                 return {"status": "idle_succes"}, 200
             else:
                 return {"status": "idle_fail"}, 200
@@ -195,7 +216,8 @@ def upload_video():
         return "No selected file.", 400
     
     clear_directory(UPLOAD_FOLDER)
-    clear_directory(DOWNLOAD_FOLDER)
+    if os.listdir(DOWNLOAD_FOLDER):
+        clear_directory(DOWNLOAD_FOLDER)
     save_path = os.path.join(UPLOAD_FOLDER, video.filename)
     video.save(save_path)
     print(f"Video saved to: {save_path}")

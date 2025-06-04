@@ -5,7 +5,10 @@ import time
 from flask import Flask, request, send_file, abort
 from threading import Thread, Lock
 import argparse
-import CallViewerDummy
+import CallViewer
+from multiprocessing import Process
+import time
+import sys
 
 app = Flask(__name__)
 
@@ -31,6 +34,7 @@ job_running = False
 job_lock = Lock()
 
 is_splat_gen = False
+viewer_process = None
 
 
 def clear_directory(directory_path):
@@ -48,6 +52,28 @@ def clear_directory(directory_path):
                     os.remove(file_path)
             except Exception as e:
                 print(f"Error deleting {file_path}: {e}")
+
+def start_viewer():
+    global viewer_process
+
+    # Vorherigen Prozess beenden, falls er noch läuft
+    if viewer_process and viewer_process.poll() is None:
+        viewer_process.terminate()
+        viewer_process.wait()
+        print("Killed old viewer process.")
+
+    # Prüfen ob es etwas zum Anzeigen gibt
+    if os.listdir(DOWNLOAD_FOLDER):
+        viewer_process = subprocess.Popen(
+            [sys.executable, "CallViewer.py"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+        print("Started viewer process.")
+    else:
+        print("No Splat.ply in downloads.")
+
+
 
 
 def upload_and_monitor_job_dummy(save_path, keep_pre, keep_post, keep_train_img, iterations):
@@ -136,8 +162,7 @@ def job_status():
             return {"status": "running"}, 200
         else:
             if is_splat_gen:
-                thread = Thread(target=CallViewerDummy.main)  # Hier das andere scrip 
-                thread.start()
+                start_viewer()
                 return {"status": "idle_succes"}, 200
             else:
                 return {"status": "idle_fail"}, 200
@@ -170,7 +195,8 @@ def upload_video():
 
     clear_directory(UPLOAD_FOLDER)
     clear_directory("../splat_workspace/input_data")
-    clear_directory(DOWNLOAD_FOLDER)
+    if os.listdir(DOWNLOAD_FOLDER):
+        clear_directory(DOWNLOAD_FOLDER)
     # Save the uploaded file
     save_path = os.path.join(UPLOAD_FOLDER, video.filename)
     video.save(save_path)
@@ -209,7 +235,7 @@ def start_zrok_tunnel():
     Starts a zrok tunnel subprocess for public access.
     Returns the subprocess handle to allow termination on exit.
     """
-    proc = subprocess.Popen(["zrok", "share", "reserved", args.url_name])
+    proc = subprocess.Popen(["zrok", "share", "reserved","--headless", args.url_name])
     print(f"Zrok tunnel started. URL: https://{args.url_name}.share.zrok.io")
     return proc
 

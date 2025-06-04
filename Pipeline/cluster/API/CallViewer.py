@@ -4,9 +4,7 @@ import shutil
 import webbrowser
 import time
 def main():
-    print("CallViewerDummy Cluster läuft")
 
-    
     downloads_path = os.path.join(os.path.dirname(__file__), "downloads")
 
 
