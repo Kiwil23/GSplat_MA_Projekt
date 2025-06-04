@@ -4,13 +4,8 @@ import shutil
 import webbrowser
 import time
 def main():
-    print("CallViewerDummy Local läuft")
-
     
     downloads_path = os.path.join(os.path.dirname(__file__), "downloads")
-
-
-
     viewer_path = os.path.join("..","..","..","superSplatViewer")
     dist_path = os.path.join(viewer_path,"dist")
     model_path = os.path.join(dist_path, "model")

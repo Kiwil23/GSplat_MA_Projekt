@@ -18,7 +18,7 @@ app = Flask(__name__)
 # Local folders
 UPLOAD_FOLDER = 'uploads'
 DOWNLOAD_FOLDER = 'downloads'
-CLUSTER_PATH = '/dss/dsshome1/09/di97yuz'
+CLUSTER_PATH = ''
 URL_NAME = 'splatscan777scapp777'
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
