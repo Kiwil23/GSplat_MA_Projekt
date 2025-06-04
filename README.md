@@ -144,6 +144,15 @@ result_data/
 ```
 
 ---
+## 🖼️ Viewer Setup
+
+Ensure you have Node.js 18 or later installed and follow these steps:
+1. ```cd GSplat_MA_Projekt```
+2. ```git clone https://github.com/Deldood/superSplatViewer.git```
+3. ```cd superSplatViewer```
+4. ```git submodule update --init```
+5. ```npm install```
+---
 
 ## 📱 App Usage
 
@@ -180,7 +189,7 @@ result_data/
    - Tap `UPLOAD VIDEO` and wait for training to finish.  
    - The result `.ply` file will be available in:  
      ```
-     /API/downloads
+     /splat_workspace/result_data
      ```
 
 
