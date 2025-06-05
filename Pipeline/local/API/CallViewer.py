@@ -3,6 +3,9 @@ import subprocess
 import webbrowser
 import time
 import requests
+import shutil
+
+ 
 
 def wait_for_server(url, timeout=60, interval=2):
     """Wartet, bis die URL erreichbar ist oder Timeout erreicht."""
@@ -22,7 +25,20 @@ def wait_for_server(url, timeout=60, interval=2):
         time.sleep(interval)
 
 def main():
-    viewer_path = os.path.join("..", "..", "..", "superSplatViewer")
+    downloads_path = os.path.join(os.path.dirname(__file__), "downloads")
+    viewer_path = os.path.join("..","..","..","superSplatViewer")
+    dist_path = os.path.join(viewer_path,"dist")
+    model_path = os.path.join(dist_path, "model")
+    source_file = os.path.join(downloads_path, "splat.ply")
+    source_file_workaround = os.path.join(downloads_path, "IDF.ply")
+    target_file = os.path.join(model_path, "splat.ply")
+    target_file_workaround = os.path.join(model_path, "IDF.ply")
+
+    shutil.copy(source_file, source_file_workaround)
+    shutil.move(source_file, target_file)
+    shutil.move(source_file_workaround, target_file_workaround)
+    print(f"Moved splat to: {target_file}")
+
     process = subprocess.Popen(
         ["npm", "run", "develop"],
         cwd=viewer_path,
