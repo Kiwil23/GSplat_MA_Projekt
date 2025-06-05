@@ -47,6 +47,11 @@ job_lock = Lock()
 is_splat_gen = False
 viewer_process = None
 
+def print_progress(transferred, total):
+    percent = (transferred / total) * 100
+    sys.stdout.write(f"\rDownload progress: {percent:.2f}% ({transferred}/{total} bytes)")
+    sys.stdout.flush()
+
 def clear_directory(directory_path):
     """Remove all files and folders from the given directory."""
     if os.path.exists(directory_path):
@@ -87,10 +92,14 @@ def is_job_running(ssh, job_id):
     return job_id in output
 
 def download_file_from_cluster(ssh, remote_path, local_path):
-    """Download a file from the cluster via SFTP."""
+    """Download a file from the cluster via SFTP with progress indication."""
     sftp = ssh.open_sftp()
-    sftp.get(remote_path, local_path)
+    file_size = sftp.stat(remote_path).st_size
+    print(f"Starting download of {remote_path} to {local_path}...")
+    sftp.get(remote_path, local_path, callback=print_progress)
     sftp.close()
+    print("\nDownload finished.")
+
 
 def print_progress(transferred, total):
     percent = (transferred / total) * 100
