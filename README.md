@@ -28,13 +28,6 @@ Create and activate the environment:
 conda env create -f environment.yml
 conda activate splat_pipeline
 ```
-
-Or install manually:
-
-```bash
-pip install flask paramiko
-```
-
 ---
 
 ### 🌐 Zrok Setup
