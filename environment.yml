@@ -6,3 +6,4 @@ dependencies:
   - flask
   - paramiko
   - requests
+  - git
