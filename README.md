@@ -128,6 +128,7 @@ GSplat_MA_Projekt/Docker_Splat_Tools
 ```bash
 USER_PATH  → your project save path
 ```
+You may need to change line endings from CRLF to LF
 
 4. Remove `.gitkeep` files from:
 
