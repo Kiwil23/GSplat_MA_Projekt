@@ -165,7 +165,7 @@ Ensure you have Node.js 18 or later installed and follow these steps:
    - Tap `SET URL` and enter your zrok subdomain name.
 
 3. **Capture Video**  
-   - Tap `Start Recording` to record your object.  
+   - Tap `START SCANNING` to record your object.  
    - Try to capture as many angles as possible and ensure good lighting and focus.
 
 4. **Set Training Parameters**  
@@ -179,7 +179,7 @@ Ensure you have Node.js 18 or later installed and follow these steps:
    | `--train_iters=XXXX`          | Number of training iterations                                 |
 
 5. **Upload and Wait**  
-   - Tap `UPLOAD VIDEO` and wait for training to finish.  
+   - Tap `GENERATE SPLAT` and wait for training to finish.  
    - The result `.ply` file will be available in:  
      ```
      /splat_workspace/result_data
