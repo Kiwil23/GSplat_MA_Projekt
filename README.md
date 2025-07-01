@@ -1,8 +1,6 @@
+# GSplat Master's Project 
 [![Video anschauen: GitHub Projekt von Steffen Rohe](https://img.youtube.com/vi/2Y2tFEuWnfY/maxresdefault.jpg)](https://www.youtube.com/watch?v=2Y2tFEuWnfY)
-
-
-# GSplat Master's Project – Setup Guide
-
+# Setup Guide
 ## 🎨💥 Description
 This Repository contains a Colmap and Nerfstudio based Gaussian Splatting 3D reconstruction pipeline designed for efficient and high-quality 3D scene modeling from video or images. The project includes a complete processing pipeline that runs on the LRZ AI cluster or locally with NVIDIA GPUs, and features an Android app (SplatScan) to capture videos, set parameters, and upload data seamlessly for 3D reconstruction.
 
