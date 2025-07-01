@@ -1,3 +1,6 @@
+[![Video anschauen: GitHub Projekt von Steffen Rohe](https://img.youtube.com/vi/2Y2tFEuWnfY/maxresdefault.jpg)](https://www.youtube.com/watch?v=2Y2tFEuWnfY)
+
+
 # GSplat Master's Project – Setup Guide
 
 ## 🎨💥 Description
